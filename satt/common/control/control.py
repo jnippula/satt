@@ -28,8 +28,8 @@ def get_instance():
         from satt.common import envstore
         ctrl = envstore.get_instance().get_variable('sat_control_bus')
         if ctrl == '':
-            print "\nNo control bus selected"
-            print "Please run 'satt config'"
+            print("\nNo control bus selected")
+            print("Please run 'satt config'")
             sys.exit(-1)
         else:
             if ctrl == "SSH":
@@ -42,7 +42,7 @@ def get_instance():
                 from satt.common.control import AdbControl
                 control_instance = AdbControl(DEBUG)
             else:
-                print "ERROR: Unsupported control bus type (" + ctrl + ")"
+                print("ERROR: Unsupported control bus type (" + ctrl + ")")
                 sys.exit(-1)
     return control_instance
 
@@ -64,17 +64,17 @@ class Control(object):
         if data == None or data == '':
             return ''
         # is string
-        elif isinstance(data, basestring):
+        elif isinstance(data, str):
             return data
         # is iterable
         elif isinstance(data, list):
             return ''.join(data)
         else:
-            print 'ERROR: unknown return value'
+            print('ERROR: unknown return value')
 
     def _debug_print(self, msg):
         if self._debug:
-            print msg
+            print(msg)
 
     def initialize(self, logger=None):
         """ initialize
@@ -84,19 +84,19 @@ class Control(object):
     def shell_command(self, command, skip_exception=False):
         """ run_command
         """
-        print "run_command"
+        print("run_command")
 
     def get_remote_file(self, copy_from, copy_to):
         """ get_file
         """
-        print "get_file"
+        print("get_file")
 
     def push_local_file(self, copy_from, copy_to):
         """ push_file
         """
-        print "push_file"
+        print("push_file")
 
     def get_tmp_folder(self):
         """ push_file
         """
-        print "get_tmp_folder"
+        print("get_tmp_folder")
