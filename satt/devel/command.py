@@ -86,7 +86,7 @@ class SattDevel:
         # Complete words for bash autocomplete
         if len(sys.argv) > 1:
             if sys.argv[1] == '--completewords':
-                print ' '.join(self._scripts.keys())
+                print(' '.join(list(self._scripts.keys())))
                 sys.exit(0)
 
         parser = argparse.ArgumentParser(description='satt devel', formatter_class=HelpTextFormatter)
@@ -96,8 +96,8 @@ class SattDevel:
         parser.add_argument('script', action='store', help=help_txt)
         self._args, additionals = parser.parse_known_args()
 
-        if self._args.script in self._scripts.keys():
+        if self._args.script in list(self._scripts.keys()):
             os.system(self._scripts[self._args.script].Cmd)
         else:
-            print "Unknown command: '" + self._args.script + "'"
+            print("Unknown command: '" + self._args.script + "'")
             sys.exit(-1)
