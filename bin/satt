@@ -22,8 +22,8 @@ import subprocess
 
 def main():
 
-    if sys.version_info >= (3, 0):
-        print ("ERROR: Please run satt with Python2.7*")
+    if sys.version_info < (3, 0):
+        print ("ERROR: Please run satt with Python3.*")
         sys.exit(-1)
 
     sat_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
