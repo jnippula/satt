@@ -19,7 +19,7 @@
 import re
 import sys
 import time
-from control import Control
+from .control import Control
 
 DEBUG_ENABLE = False
 ADB_API_CHANGE = ('0', '1', '13')

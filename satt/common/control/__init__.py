@@ -14,7 +14,7 @@
 // limitations under the License.
 '''
 
-from control import Control
-from adb import AdbControl
-from ssh import SshControl
-from shell import ShellControl
+from .control import Control
+from .adb import AdbControl
+from .ssh import SshControl
+from .shell import ShellControl

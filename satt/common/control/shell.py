@@ -19,7 +19,7 @@
 import sys
 import shutil
 import subprocess
-from control import Control
+from .control import Control
 
 
 class ShellControl(Control):

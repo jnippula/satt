@@ -18,7 +18,7 @@
 
 import sys
 import subprocess
-from control import Control
+from .control import Control
 from satt.common import envstore
 
 
