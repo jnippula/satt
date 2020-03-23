@@ -67,7 +67,7 @@ class LinuxOs(TargetOs):
         self._set_sat_kernel_paths(variables)
 
     def _set_sat_kernel_paths(self, variables):
-        print helper.color.BOLD + 'Select kernel paths:' + helper.color.END
+        print(helper.color.BOLD + 'Select kernel paths:' + helper.color.END)
         if variables['sat_control_bus'] == 'SHELL':
             # TODO what if SSH command?
             kmods = '/lib/modules/' + platform.release()
@@ -76,44 +76,44 @@ class LinuxOs(TargetOs):
 
         selection = 'n'
         if variables['sat_path_modules'] != '':
-            selection = raw_input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
+            selection = input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_modules')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_modules'] = raw_input('   Give another kernel modules path: ')
+                variables['sat_path_modules'] = input('   Give another kernel modules path: ')
                 variables['sat_path_modules'] = variables['sat_path_modules'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_modules'):
                     break
-        print
+        print()
 
         variables['sat_path_kernel'] = variables['sat_path_modules'] + '/build'
         selection = 'n'
         if variables['sat_path_kernel'] != '':
-            selection = raw_input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
+            selection = input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel'] = raw_input('   Give another kernel path: ')
+                variables['sat_path_kernel'] = input('   Give another kernel path: ')
                 variables['sat_path_kernel'] = variables['sat_path_kernel'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel'):
                     break
-        print
+        print()
 
         variables['sat_path_kernel_src'] = variables['sat_path_kernel']
         selection = 'n'
         if variables['sat_path_kernel_src'] != '':
-            selection = raw_input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
+            selection = input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel_src')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel_src'] = raw_input('   Give another kernel source path: ')
+                variables['sat_path_kernel_src'] = input('   Give another kernel source path: ')
                 variables['sat_path_kernel_src'] = variables['sat_path_kernel_src'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel_src'):
                     break
-        print
+        print()
 
     def get_debug_paths(self):
         #TODO return right paths, debug-cache path also?
@@ -142,4 +142,4 @@ class LinuxOs(TargetOs):
         build_info['kernel_version'] = ' '.join(uname)
 
         pickle.dump(build_info, open(os.path.join(self._trace_path, "build_info.p"), "wb"), pickle.HIGHEST_PROTOCOL)
-        print "Get build info from the device"
+        print("Get build info from the device")
