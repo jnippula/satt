@@ -54,7 +54,7 @@ class YoctoOs(TargetOs):
         if os.path.lexists(kernel_path):
             return os.path.join(kernel_path, 'vmlinux')
         else:
-            print "Error: Incorrect kernel path, check configuration!"
+            print("Error: Incorrect kernel path, check configuration!")
             sys.exit(-1)
 
     def get_system_map_path(self):
@@ -63,7 +63,7 @@ class YoctoOs(TargetOs):
         if os.path.lexists(kernel_path):
             return os.path.join(kernel_path, 'System.map')
         else:
-            print "Error: Incorrect kernel path, check configuration!"
+            print("Error: Incorrect kernel path, check configuration!")
             sys.exit(-1)
 
     def get_name(self):
@@ -111,8 +111,8 @@ class YoctoOs(TargetOs):
             # Search all dbg packages
             for rootfolder, directors, fns in os.walk(target_pkg_path):
                 for subdir in directors:
-                    root, dirs, files = os.walk(os.path.join(target_pkg_path, subdir)).next()
-                    tmp_pkgs = filter(lambda k: '-dbg' in k, files)
+                    root, dirs, files = next(os.walk(os.path.join(target_pkg_path, subdir)))
+                    tmp_pkgs = [k for k in files if '-dbg' in k]
                     pkgs.extend([subdir + '/' + s for s in tmp_pkgs])
             pkgs_len = len(pkgs)
             pkgs_count = 0
@@ -151,7 +151,7 @@ class YoctoOs(TargetOs):
         self._set_sat_target_paths(variables)
 
     def _set_sat_kernel_paths(self, variables):
-        print helper.color.BOLD + 'Select kernel paths:' + helper.color.END
+        print(helper.color.BOLD + 'Select kernel paths:' + helper.color.END)
         if variables['sat_control_bus'] == 'SHELL':
             # TODO what if SSH command?
             kmods = '/lib/modules/' + platform.release()
@@ -160,57 +160,57 @@ class YoctoOs(TargetOs):
 
         selection = 'n'
         if variables['sat_path_modules'] != '':
-            selection = raw_input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
+            selection = input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_modules')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_modules'] = raw_input('   Give kernel modules path: ')
+                variables['sat_path_modules'] = input('   Give kernel modules path: ')
                 variables['sat_path_modules'] = variables['sat_path_modules'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_modules'):
                     break
-        print
+        print()
 
         selection = 'n'
         if variables['sat_path_kernel'] != '':
-            selection = raw_input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
+            selection = input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel'] = raw_input('   Give another kernel path: ')
+                variables['sat_path_kernel'] = input('   Give another kernel path: ')
                 variables['sat_path_kernel'] = variables['sat_path_kernel'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel'):
                     break
-        print
+        print()
 
         selection = 'n'
         if variables['sat_path_kernel_src'] != '':
-            selection = raw_input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
+            selection = input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel_src')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel_src'] = raw_input('   Give another kernel source path: ')
+                variables['sat_path_kernel_src'] = input('   Give another kernel source path: ')
                 variables['sat_path_kernel_src'] = variables['sat_path_kernel_src'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel_src'):
                     break
-        print
+        print()
 
     def _set_sat_target_paths(self, variables):
-        print helper.color.BOLD + 'Select target paths:' + helper.color.END
+        print(helper.color.BOLD + 'Select target paths:' + helper.color.END)
         selection = 'n'
         if variables['sat_target_build'] != '':
-            selection = raw_input("   Use target build path: '" + variables['sat_target_build'] + "' ? [Y/n] ")
+            selection = input("   Use target build path: '" + variables['sat_target_build'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_target_build')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_target_build'] = raw_input('   Give another target build path: ')
+                variables['sat_target_build'] = input('   Give another target build path: ')
                 variables['sat_target_build'] = variables['sat_target_build'].rstrip()
                 if self.validate_target_path(variables, 'sat_target_build'):
                     break
-        print
+        print()
 
 # ####################################
 # Private methods
@@ -235,4 +235,4 @@ class YoctoOs(TargetOs):
         build_info['kernel_version'] = ' '.join(uname)
 
         pickle.dump(build_info, open(os.path.join(self._trace_path, "build_info.p"), "wb"), pickle.HIGHEST_PROTOCOL)
-        print "Get build info from the device"
+        print("Get build info from the device")
