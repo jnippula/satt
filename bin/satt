@@ -23,7 +23,7 @@ import subprocess
 def main():
 
     if sys.version_info < (3, 0):
-        print ("ERROR: Please run satt with Python3.*")
+        print("ERROR: Please run satt with Python3.*")
         sys.exit(-1)
 
     sat_path = os.path.split(os.path.dirname(os.path.realpath(__file__)))[0]
@@ -35,10 +35,10 @@ def main():
     activate_this_file = os.path.join(satt_venv_bin, 'activate_this.py')
 
     if not VENV and os.path.isfile(activate_this_file):
-        execfile(activate_this_file, dict(__file__=activate_this_file))
+        exec(compile(open(activate_this_file, "rb").read(), activate_this_file, 'exec'), dict(__file__=activate_this_file))
     else:
         satt_venv_bin = False
-        print ("Warning: SATT has not been installed, please install SATT by\n > ./bin/satt install")
+        print("Warning: SATT has not been installed, please install SATT by\n > ./bin/satt install")
 
     from satt.common import initializer
     satt = initializer.Satt(sat_path, satt_venv_bin)
@@ -59,7 +59,7 @@ def main():
         elif sys.argv[1][0] == '-':
             satt.parse_options()
         else:
-            print ("Unknown command '" + opt + "'\n")
+            print("Unknown command '" + opt + "'\n")
             satt.print_usage()
 
     else:
