@@ -60,7 +60,7 @@ class Logger(object):
 
     def _debug_print(self, msg):
         if self._debug:
-            print msg
+            print(msg)
 
     def __init__(self, control):
         self.sat_home_path = envstore.store.get_sat_home()
@@ -81,7 +81,7 @@ class Logger(object):
 
         # Initialize controller
         if not self._control.initialize():
-            print "ERROR: trace device not found, or more than one device connected"
+            print("ERROR: trace device not found, or more than one device connected")
             sys.exit(-1)
 
     def initialize(self):
@@ -106,7 +106,7 @@ class Logger(object):
         ret = False
         local_sat_path = os.path.join(self.sat_home_path, 'src', 'kernel-module', 'sat.ko')
         if os.path.exists(local_sat_path):
-            print "Copy sat.ko from sat env to target device"
+            print("Copy sat.ko from sat env to target device")
             self._control.push_local_file(local_sat_path, self._os.get_tmp_folder() + '/sat.ko')
             try:
                 try_data_folder = self._control.shell_command("insmod " + self._os.get_tmp_folder() + "/sat.ko sat_path=" +
@@ -115,20 +115,20 @@ class Logger(object):
                 if try_data_folder is None:
                     ret = True
             except Exception as e:
-                print "ERROR: " + str(e)
+                print("ERROR: " + str(e))
                 sys.exit(1)
         return ret
 
     def _load_kernel_module(self):
         """ Load kernel module
         """
-        print
+        print()
         lsmod = self._control.shell_command("lsmod")
         if lsmod is None:
             lsmod = ""
         if "sat " not in lsmod:
             time.sleep(1)
-            print "install sat.ko (" + self._kernel_module_parameters + ")"
+            print("install sat.ko (" + self._kernel_module_parameters + ")")
             result = False
             for path in self._os.get_sat_module_paths():
                 res = self._control.shell_command('if [ -e "' + path + '" ]; then echo OK; fi')
@@ -141,22 +141,22 @@ class Logger(object):
                     if "can't open" in res or "No such file" in res:
                         continue
                     else:
-                        print "ERROR: " + res
+                        print("ERROR: " + res)
                         sys.exit(1)
                 else:
                     result = True
                     self._active_sat_module_path = path
-                    print "Loaded " + path + " kernel module"
+                    print("Loaded " + path + " kernel module")
                     break
             if not result:
                 # SAT ko not found from device
                 # Try to copy to device
                 if not self._copy_and_load_kernel_module():
-                    print "sat.ko loading failed"
+                    print("sat.ko loading failed")
                     sys.exit()
         else:
             if self._power_period:
-                print self._control.shell_command("echo " + self._power_period + " > /sys/module/sat/parameters/power_monitor")
+                print(self._control.shell_command("echo " + self._power_period + " > /sys/module/sat/parameters/power_monitor"))
 
     def start_tracing(self):
         ''' Start Tracing, base implementation
@@ -164,9 +164,9 @@ class Logger(object):
         self._debug_print("start_tracing")
         res = self._control.shell_command("echo 1 > /sys/kernel/debug/sat/trace_enable")
         if res == '':
-            print "Started"
+            print("Started")
         else:
-            print "Error: {0}".format(res)
+            print("Error: {0}".format(res))
             sys.exit(-1)
 
     def stop_tracing(self):
@@ -178,7 +178,7 @@ class Logger(object):
     def get_trace_name(self, msg=""):
         if not msg:
             msg = "Save Trace by giving <<trace name>> or discard trace by pressing <<enter>>? :"
-        trace_name = raw_input(msg)
+        trace_name = input(msg)
         if trace_name:
             # Save the Traces
             path = os.getcwd()
@@ -215,17 +215,17 @@ class Logger(object):
         self._debug_print("get_sideband_data")
 
         # Get sideband info
-        print "\rsideband data : ",
+        print("\rsideband data : ", end=' ')
         sys.stdout.flush()
         # self._control.shell_command("cat /sys/kernel/debug/sat/sideband_data > " + self._tmp + "/sideband.bin")
         if 'OK' in self._control.shell_command('if [ -e "/sys/kernel/debug/sat/sideband_data" ]; then echo OK; fi'):
             self._control.get_remote_file('/sys/kernel/debug/sat/sideband_data', os.path.join(self.trace_path, 'sideband.bin'))
-            print "/sys/kernel/debug/sat/sideband_data"
+            print("/sys/kernel/debug/sat/sideband_data")
         elif 'OK' in self._control.shell_command('if [ -e "/sys/kernel/debug/sat/cpu0_sideband" ]; then echo OK; fi'):
             self.get_per_cpu_sideband()
-            print "/sys/kernel/debug/sat/cpuX_sideband"
+            print("/sys/kernel/debug/sat/cpuX_sideband")
         else:
-            print "NOT FOUND!"
+            print("NOT FOUND!")
 
 
     def get_sat_module(self):
@@ -245,10 +245,10 @@ class Logger(object):
                         self._active_sat_module_path = line
                         break
 
-        print "\rsat.ko        : ",
+        print("\rsat.ko        : ", end=' ')
         sys.stdout.flush()
         self._control.get_remote_file(self._active_sat_module_path, os.path.join(binary_path, 'sat.ko'))
-        print self._active_sat_module_path
+        print(self._active_sat_module_path)
 
     def get_trace_data(self):
         ''' Virtual function, implement as needed
@@ -277,7 +277,7 @@ class Logger(object):
                         modules[match.group(3)] = ["0x"+match.group(1), match.group(2)]
             subp.close()
         except:
-            print "Warning: Kernel modules dumping failed", sys.exc_info()[0]
+            print("Warning: Kernel modules dumping failed", sys.exc_info()[0])
 
     def dump_kernel_modules(self):
         # Dump kernel binary from the phone memory
@@ -290,9 +290,9 @@ class Logger(object):
             os.makedirs(local_kmod_path)
 
         index_count = 0
-        for name, data in dev_list.items():
+        for name, data in list(dev_list.items()):
             index_count += 1
-            print '\rDump kernel modules: ' + str(index_count * 100 / len(dev_list)).rjust(3, ' ') + '%',
+            print('\rDump kernel modules: ' + str(index_count * 100 / len(dev_list)).rjust(3, ' ') + '%', end=' ')
             sys.stdout.flush()
             ko_fetch_addr_cmd = 'echo {0} > /sys/kernel/debug/sat/ko_fetch_addr'.format(data[0])
             self._control.shell_command(ko_fetch_addr_cmd)
@@ -300,10 +300,10 @@ class Logger(object):
             self._control.shell_command(ko_fetch_addr_cmd)
             # self._control.shell_command("cat /d/sat/ko_fetch_data > " + self._os.get_tmp_folder() + "/dump3")
             self._control.get_remote_file('/sys/kernel/debug/sat/ko_fetch_data', os.path.join(local_kmod_path, name + ".dump"))
-        print
+        print()
 
     def dump_kernel(self):
-        print "\rFetch Kernel dump:     0%",
+        print("\rFetch Kernel dump:     0%", end=' ')
         sys.stdout.flush()
 
         kernel_address = ""
@@ -331,17 +331,17 @@ class Logger(object):
         if not os.path.exists(kernel_dump_path):
             os.makedirs(kernel_dump_path)
 
-        print "\rFetch Kernel dump:     5%",
+        print("\rFetch Kernel dump:     5%", end=' ')
         sys.stdout.flush()
         # Dump kernel code into file
         kernel_dump_cmd = "echo {0} > /sys/kernel/debug/sat/ko_fetch_addr".format(kernel_address)
         self._control.shell_command(kernel_dump_cmd)
         kernel_dump_cmd = "echo {0} > /sys/kernel/debug/sat/ko_fetch_size".format(kernel_size)
         self._control.shell_command(kernel_dump_cmd)
-        print "\rFetch Kernel dump:    20%",
+        print("\rFetch Kernel dump:    20%", end=' ')
         sys.stdout.flush()
         self._control.get_remote_file('/sys/kernel/debug/sat/ko_fetch_data', os.path.join(kernel_dump_path, 'kernel_dump'))
-        print "\rFetch Kernel dump:   100%"
+        print("\rFetch Kernel dump:   100%")
         sys.stdout.flush()
 
 #    def pack_for_upload(self, name):
@@ -358,18 +358,18 @@ class Logger(object):
     def dump_linux_gate(self):
         outp = self._control.shell_command('dd if=/proc/self/mem bs=4096 skip=1048574 count=1 of=' +
                                            self._os.get_tmp_folder() + '/linux-gate.so.1')
-        print "\rDumping linux-gate:   0%",
+        print("\rDumping linux-gate:   0%", end=' ')
         sys.stdout.flush()
         self._control.get_remote_file(self._os.get_tmp_folder() + '/linux-gate.so.1',
                                       os.path.join(self.trace_path, 'linux-gate.so.1'))
-        print "\rDumping linux-gate: 100%"
+        print("\rDumping linux-gate: 100%")
 
     def instructions_for_processing(self):
         if sys.platform.startswith('win'):
 
-            print "Post process traces by running:"
-            print "#> satt process {0}".format(self.trace_name)
+            print("Post process traces by running:")
+            print("#> satt process {0}".format(self.trace_name))
         else:
-            print "Post process traces, by run following command:"
-            print "#> satt process {0}".format(self.trace_name)
-            print "\nProcess info - TODO"
+            print("Post process traces, by run following command:")
+            print("#> satt process {0}".format(self.trace_name))
+            print("\nProcess info - TODO")
