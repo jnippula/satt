@@ -73,7 +73,7 @@ class BinaryPatch:
             line = p.readline().rstrip()
             p.close()
             if line.find('sat.ko') >= 0:
-                print 'Fetch sat.ko from ' + line
+                print('Fetch sat.ko from ' + line)
                 p = os.popen('adb pull "' + line + ' ' + self.trace_folder + '"')
                 p.close()
             else:
@@ -82,7 +82,7 @@ class BinaryPatch:
                     line = p.readline().rstrip()
                     p.close()
                     if not line.find('No such file') >= 0:
-                        print 'Fetch sat.ko from ' + line + ' (3)'
+                        print('Fetch sat.ko from ' + line + ' (3)')
                         p = os.popen('adb pull ' + line + ' ' + self.trace_folder)
                         break
         os.chdir(curdir)
@@ -204,7 +204,7 @@ class BinaryPatch:
         if os.path.isfile(kernelfilepath):
 
             if not os.path.isfile(os.path.join(self.dump_file_folder, 'kernel_dump')):
-                print 'kernel_dump not found'
+                print('kernel_dump not found')
                 err = 'no_dump'
                 return err
 
@@ -212,7 +212,7 @@ class BinaryPatch:
             # if not official and not ignore_sat_module:
             #    self.getSatModuleFromDevice()
 
-            print 'Patching vmlinux'
+            print('Patching vmlinux')
             dumpfile = open(os.path.join(self.dump_file_folder, 'kernel_dump'), 'rb')
             targetfile = open(kernelfilepath, 'r+b')
             err = self.patchFile(dumpfile, targetfile).strip()
@@ -220,18 +220,18 @@ class BinaryPatch:
             targetfile.close()
 
             if err != '':
-                print 'File vmlinux: ' + err
+                print('File vmlinux: ' + err)
                 sys.exit(1)
             else:
                 # rename vmlinux_ file to vmlinux
                 os.rename(kernelfilepath, kernelfilepath[:-1])
 
         elif not os.path.isfile(kernelfilepath[:-1]):
-            print 'ERROR: Original vmlinux_ or patched vmlinux not found!'
+            print('ERROR: Original vmlinux_ or patched vmlinux not found!')
             sys.exit(1)
 
         if not os.path.isdir(self.kmod_dump_file_folder):
-                print 'kmod dump folder not found'
+                print('kmod dump folder not found')
                 err = 'no_dump'
                 return err
 
@@ -239,10 +239,10 @@ class BinaryPatch:
         dump_to_km = self.getModulesLists(self.kmod_dump_file_folder)
         module_count = len(dump_to_km)
         if module_count > 0:
-            print 'Patch kernel modules:'
-            for dump, module in dump_to_km.items():
+            print('Patch kernel modules:')
+            for dump, module in list(dump_to_km.items()):
                 index_count += 1
-                print '\rProcessing: ' + str(index_count * 100 / module_count).rjust(3, ' ') + '%',
+                print('\rProcessing: ' + str(index_count * 100 / module_count).rjust(3, ' ') + '%', end=' ')
                 sys.stdout.flush()
                 targetfilepath = os.path.join(self.kernel_module_target_path, module)
 
@@ -253,12 +253,12 @@ class BinaryPatch:
                 targetfile.close()
 
                 if err != '':
-                    print 'File ' + module + ': ' + err
+                    print('File ' + module + ': ' + err)
                     sys.exit(1)
                 else:
                     os.rename(targetfilepath, targetfilepath[:-1])
 
-            print 'Patching done'
+            print('Patching done')
             targetfilepath = os.path.join(self.kernel_module_target_path, "*.ko_")
             for ko_ in glob.glob(targetfilepath):
 	            os.remove(ko_)
