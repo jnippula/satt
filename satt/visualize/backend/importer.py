@@ -45,9 +45,9 @@ for fn in glob.glob(SCP_UPLOAD_FOLDER + "*.tgz"):
     try:
         # Check if file is still open?
         subprocess.check_output("lsof -- " + trace_tgz, shell=True)
-        print 'File still uploading ' + trace_tgz
+        print('File still uploading ' + trace_tgz)
     except:
-        print 'File ready to import ' + trace_tgz
+        print('File ready to import ' + trace_tgz)
         try:
             trace_file_name = os.path.basename(trace_tgz)
             sat_trace_uniq = SAT_IMPORT_FOLDER + "/" + str(uuid.uuid4())
@@ -60,5 +60,5 @@ for fn in glob.glob(SCP_UPLOAD_FOLDER + "*.tgz"):
             trace_id = status.create_id(sat_trace_uniq_path, trace_file_name)
             result = queue.enqueue(worker.import_trace_to_server, trace_id, timeout=7200)
         except:
-            print "Err something whent wrong"
+            print("Err something whent wrong")
     pass
