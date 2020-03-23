@@ -104,28 +104,28 @@ class AndroidOs(TargetOs):
 
     def _set_official_or_local(self, variables):
         origins = [False, True]
-        print helper.color.BOLD + 'Select: SW Build origin' + helper.color.END
-        print " * 0) Own Build"
-        print "   1) Official Build"
+        print(helper.color.BOLD + 'Select: SW Build origin' + helper.color.END)
+        print(" * 0) Own Build")
+        print("   1) Official Build")
         variables['sat_build_official'] = origins[0]
         value = self._readchar()
         if value.isdigit():
             if int(value) >= 0 and int(value) <= 1:
                 variables['sat_build_official'] = origins[int(value)]
-        print
+        print()
 
     def _set_sat_target_source(self, variables):
-        print ('Set ' + helper.color.BOLD + 'Target source path' + helper.color.END + ' ' * 7 +
+        print('Set ' + helper.color.BOLD + 'Target source path' + helper.color.END + ' ' * 7 +
                '--> Path to point root folder of Android build you are tracing')
         if 'sat_target_source' in variables and variables['sat_target_source'] != '':
-            print ' * current ' + ' ' * 17 + ': ' + variables['sat_target_source']
+            print(' * current ' + ' ' * 17 + ': ' + variables['sat_target_source'])
         else:
-            print '   example ' + ' ' * 17 + ': /home/joe/builds/android'
+            print('   example ' + ' ' * 17 + ': /home/joe/builds/android')
         self._helper.prepare_readline()
-        selection = raw_input('   enter' + ' ' * 20 + ': ')
+        selection = input('   enter' + ' ' * 20 + ': ')
         if selection != '':
             variables['sat_target_source'] = selection
-        print '   Target source path = ' + helper.color.BOLD + variables['sat_target_source'] + helper.color.END + '\n'
+        print('   Target source path = ' + helper.color.BOLD + variables['sat_target_source'] + helper.color.END + '\n')
 
     def _set_sat_target_build(self, variables):
         target_path = ''
@@ -134,26 +134,26 @@ class AndroidOs(TargetOs):
         elif os.path.exists(os.path.join(variables['sat_target_source'], 'out', 'target', 'product')):
             target_path = os.path.join(variables['sat_target_source'], 'out', 'target', 'product')
         else:
-            print helper.color.BOLD + 'Warning:' + helper.color.END + ' Out target path not found, fed manually'
+            print(helper.color.BOLD + 'Warning:' + helper.color.END + ' Out target path not found, fed manually')
             variables['sat_target_build'] = ''
             variables['sat_target_source'] = ''
 
         if target_path != '':
             prods = os.walk(target_path).next()[1]
             if len(prods) == 0:
-                print helper.color.BOLD + 'Warning:' + helper.color.END + ' No targets found from ' + target_path
+                print(helper.color.BOLD + 'Warning:' + helper.color.END + ' No targets found from ' + target_path)
             elif len(prods) == 1:
                 variables['sat_target_build'] = os.path.join(target_path, prods[0])
-                print 'Auto selected ' + helper.color.BOLD + 'Target build path' + helper.color.END
-                print '   Target build path = ' + helper.color.BOLD + variables['sat_target_build'] + helper.color.END + '\n'
+                print('Auto selected ' + helper.color.BOLD + 'Target build path' + helper.color.END)
+                print('   Target build path = ' + helper.color.BOLD + variables['sat_target_build'] + helper.color.END + '\n')
             else:
-                print 'Select: ' + helper.color.BOLD + 'Target build path' + helper.color.END + ' to be used'
+                print('Select: ' + helper.color.BOLD + 'Target build path' + helper.color.END + ' to be used')
                 for idx, val in enumerate(prods):
                     if val == os.path.basename(variables['sat_target_build']):
-                        print ' *',
+                        print(' *', end=' ')
                     else:
-                        print '  ',
-                    print str(idx) + ') ' + val
+                        print('  ', end=' ')
+                    print(str(idx) + ') ' + val)
                 while True:
                     value = self._readchar()
                     if value.isdigit():
@@ -162,7 +162,7 @@ class AndroidOs(TargetOs):
                             break
                     elif ord(value) == 13:
                         break
-                print '   Target build path = ' + helper.color.BOLD + variables['sat_target_build'] + helper.color.END + '\n'
+                print('   Target build path = ' + helper.color.BOLD + variables['sat_target_build'] + helper.color.END + '\n')
 
     def _set_sat_kernel_paths(self, variables):
         # SAT_PATH_KERNEL
@@ -206,36 +206,36 @@ class AndroidOs(TargetOs):
         else:
             variables['sat_path_kernel_src'] = variables['sat_path_kernel']
 
-        selection = raw_input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
+        selection = input("   Use kernel path: '" + variables['sat_path_kernel'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel'] = raw_input('Give another kernel path: ')
+                variables['sat_path_kernel'] = input('Give another kernel path: ')
                 variables['sat_path_kernel'] = variables['sat_path_kernel'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel'):
                     break
-            print "'" + variables['sat_path_kernel'] + "'"
+            print("'" + variables['sat_path_kernel'] + "'")
         else:
-            print 'Auto select ' + helper.color.BOLD + 'Target kernel path' + helper.color.END
-            print '   Target kernel path = ' + helper.color.BOLD + variables['sat_path_kernel'] + helper.color.END
+            print('Auto select ' + helper.color.BOLD + 'Target kernel path' + helper.color.END)
+            print('   Target kernel path = ' + helper.color.BOLD + variables['sat_path_kernel'] + helper.color.END)
 
 
-        print
-        selection = raw_input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
+        print()
+        selection = input("   Use kernel source path: '" + variables['sat_path_kernel_src'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_kernel_src')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_kernel_src'] = raw_input('Give another kernel source path: ')
+                variables['sat_path_kernel_src'] = input('Give another kernel source path: ')
                 variables['sat_path_kernel_src'] = variables['sat_path_kernel_src'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_kernel_src'):
                     break
-            print "'" + variables['sat_path_kernel_src'] + "'"
+            print("'" + variables['sat_path_kernel_src'] + "'")
         else:
-            print 'Auto select ' + helper.color.BOLD + 'Target kernel source path' + helper.color.END
-            print '   Target kernel source path = ' + helper.color.BOLD + variables['sat_path_kernel_src'] + helper.color.END
-        print
+            print('Auto select ' + helper.color.BOLD + 'Target kernel source path' + helper.color.END)
+            print('   Target kernel source path = ' + helper.color.BOLD + variables['sat_path_kernel_src'] + helper.color.END)
+        print()
 
         # SAT_PATH_MODULES
         if os.path.exists(os.path.join(variables['sat_target_source'], 'kernel', 'gmin')):
@@ -255,22 +255,22 @@ class AndroidOs(TargetOs):
             variables['sat_path_modules'] = os.path.join(variables['sat_target_build'],
                                                          'root', 'lib', 'modules')
         else:
-            print "WARNING: Path of kernel modules not found!"
+            print("WARNING: Path of kernel modules not found!")
 
-        selection = raw_input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
+        selection = input("   Use kernel modules path: '" + variables['sat_path_modules'] + "' ? [Y/n] ")
         if selection == 'n' or selection == 'N':
             self.print_path_type_hint('sat_path_modules')
             while(True):
                 self._helper.prepare_readline()
-                variables['sat_path_modules'] = raw_input('Give another kernel modules path: ')
+                variables['sat_path_modules'] = input('Give another kernel modules path: ')
                 variables['sat_path_modules'] = variables['sat_path_modules'].rstrip()
                 if self.validate_target_path(variables, 'sat_path_modules'):
                     break
-            print "'" + variables['sat_path_modules'] + "'"
+            print("'" + variables['sat_path_modules'] + "'")
         else:
-            print 'Auto select ' + helper.color.BOLD + 'Target kernel modules path' + helper.color.END
-            print '   Target kernel modules path = ' + helper.color.BOLD + variables['sat_path_modules'] + helper.color.END
-        print
+            print('Auto select ' + helper.color.BOLD + 'Target kernel modules path' + helper.color.END)
+            print('   Target kernel modules path = ' + helper.color.BOLD + variables['sat_path_modules'] + helper.color.END)
+        print()
 
 # ####################################
 # Private methods
@@ -295,7 +295,7 @@ class AndroidOs(TargetOs):
         build_info['kernel_version'] = self._control.shell_command("uname -a").strip()
 
         pickle.dump(build_info, open(os.path.join(self._trace_path, "build_info.p"), "wb"), pickle.HIGHEST_PROTOCOL)
-        print "Get build info from the device"
+        print("Get build info from the device")
 
         # Create local build path
         self._helper.set_trace_folder(self._trace_path)
@@ -324,7 +324,7 @@ class AndroidOs(TargetOs):
             dev_art_ls = self._control.shell_command('ls /' + art_path)
             if "No such file or directory" not in dev_art_ls:
                 # ART binaries found
-                print "\rUpdate ART binaries (" + path + "):   0%",
+                print("\rUpdate ART binaries (" + path + "):   0%", end=' ')
                 sys.stdout.flush()
 
                 art_path_components = art_path.split(os.path.sep)
@@ -362,7 +362,7 @@ class AndroidOs(TargetOs):
                         if not os.path.isfile(art_target_file_with_checksum):
                             self._control.get_remote_file(art_path + line, art_target_file_with_checksum)
                             if not os.path.isfile(art_target_file_with_checksum):
-                                print "\rERROR: File fetching failed {0}".format(line)
+                                print("\rERROR: File fetching failed {0}".format(line))
                                 continue
 
                         trace_checksums[checksum] = line
@@ -374,17 +374,17 @@ class AndroidOs(TargetOs):
                                 os.symlink(os.path.join(build_art_path, line+'-'+str(checksum)),
                                            os.path.join(trace_art_path, line))
 
-                        print '\rUpdate ART binaries (' + path + '): ',
-                        print str(index_count * 100 / art_file_amount).rjust(3, ' ') + '%',
+                        print('\rUpdate ART binaries (' + path + '): ', end=' ')
+                        print(str(index_count * 100 / art_file_amount).rjust(3, ' ') + '%', end=' ')
                         sys.stdout.flush()
 
                 pickle.dump(trace_checksums, open(trace_checksum_path, 'wb'), 2)
-                print "\rUpdate ART binaries (" + path + "): 100%"
+                print("\rUpdate ART binaries (" + path + "): 100%")
 
     def _get_screen_shot_worker(self):
         self.debug_print("AndroidOs::_get_screen_shot_worker")
         # Get screenshot from the phone
-        print 'Get the screenshot from the device'
+        print('Get the screenshot from the device')
         self._control.shell_command('screencap -p /sdcard/screen.png')
         time.sleep(0.5)
         self._control.get_remote_file('/sdcard/screen.png', os.path.join(self._trace_path, 'screen.png'))
@@ -399,7 +399,7 @@ class AndroidOs(TargetOs):
         sub_process.join(5)
 
         if sub_process.is_alive():
-            print "Warning: failed to get screenshot"
+            print("Warning: failed to get screenshot")
             # Terminate
             sub_process._Thread__stop()
             sub_process.join()
