@@ -78,11 +78,11 @@ class sideband_parser_output:
 
 class sideband_parser_input:
   def read(self, size, buffer):
-    print "Hello"
+    print("Hello")
   def eof():
-    print "Hello"
+    print("Hello")
   def bad():
-    print "Hello"
+    print("Hello")
 
 class sideband_parser:
   input_        = None
@@ -131,7 +131,7 @@ class sideband_parser:
         #version = struct.unpack('<8s', msg)[0]
         sb_version = msg + version
         if int(sb_version[-4:]) > int(SAT_SB_VERSION[-4:]):
-          print "ERROR: SB version is bigger {0} > {1} SB parser version".format(int(sb_version[-4:]), int(SAT_SB_VERSION[-4:]))
+          print("ERROR: SB version is bigger {0} > {1} SB parser version".format(int(sb_version[-4:]), int(SAT_SB_VERSION[-4:])))
           sys.exit(-10)
         return ok
 
@@ -139,13 +139,13 @@ class sideband_parser:
       msg_size = struct.unpack('<I', msg)[0]
       if msg_size == 0:
         ok = False
-        print "broken header: zero message size"
+        print("broken header: zero message size")
       elif msg_size < HEADER_MESSAGE_SIZE:
         ok = False
-        print "broken header: message size too short"
+        print("broken header: message size too short")
       elif msg_size > MESSAGE_SIZE:
         ok = False
-        print "broken header: message size too long"
+        print("broken header: message size too long")
       else:
         header_type = self.input_.read(HEADER_TYPE_SIZE)
         binary_msg += header_type
@@ -301,7 +301,7 @@ class sideband_parser:
               self.output_.schedule_id(header,addr, id)
 
             else:
-              print "broken header: unknown message type %u\n" % header_type
+              print("broken header: unknown message type %u\n" % header_type)
               ok = False
 
     else:
