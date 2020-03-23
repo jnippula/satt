@@ -614,7 +614,7 @@ public:
         }
     }
 
-    long     file_size_;
+    uint64_t file_size_;
 
 private:
     tscs     tscs_;
