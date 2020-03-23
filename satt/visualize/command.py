@@ -62,7 +62,7 @@ class SattVisualize:
                             help='import only, do not show SAT UI', required=False)
         self._args = parser.parse_args()
         if self._args.importonly and not self._args.PATH:
-            print "Error: Path must be defined in 'import only' case"
+            print("Error: Path must be defined in 'import only' case")
             return
 
         if self._args.remote:
@@ -80,10 +80,10 @@ class SattVisualize:
                         subprocess.call('chmod 600 ' + key_path, shell=True)
                     subprocess.call('scp -i ' + key_path + ' ' + sat_tgz_file + ' sat@' +
                                     sat_gui_server + ':' + sat_upload_path, shell=True)
-                    print "Upload done, and trace file is now under processing for SATT GUI"
-                    print "Check http://" + sat_gui_server + " for progress"
+                    print("Upload done, and trace file is now under processing for SATT GUI")
+                    print("Check http://" + sat_gui_server + " for progress")
                 else:
-                    print "Warning: SATT trace package '" + sat_tgz_file + "' not found!"
+                    print("Warning: SATT trace package '" + sat_tgz_file + "' not found!")
         else:
             self.url = 'http://localhost:5000/'
             python_path = 'python'
@@ -97,24 +97,24 @@ class SattVisualize:
                                     os.path.join(self.sat_home, 'satt', 'visualize', 'backend', 'db_import.py') +
                                     ' ' + self._args.PATH, shell=True)
                 else:
-                    print "ERROR: SATT trace '" + self._args.PATH + "' not found!"
+                    print("ERROR: SATT trace '" + self._args.PATH + "' not found!")
                     sys.exit(-1)
 
             # start backend
             backend_call_string = python_path + ' ' + os.path.join(self.sat_home, 'satt', 'visualize', 'backend', 'sat-backend.py')
-            print "launch backened"
+            print("launch backened")
             backend_handle = subprocess.Popen(backend_call_string.split(), preexec_fn=os.setsid)
-            print "backened running"
+            print("backened running")
 
         if not self._args.importonly:
             # launch browser with SAT UI
-            print "start browser"
+            print("start browser")
             webbrowser.open(self.url)
-            print "check backend_handle"
+            print("check backend_handle")
             if backend_handle is not None:
                 signal.signal(signal.SIGINT, signal_handler)
-                print "****************************************"
-                print "Press any key to stop satt visualizer..."
-                print "****************************************\n\n"
-                raw_input()
+                print("****************************************")
+                print("Press any key to stop satt visualizer...")
+                print("****************************************\n\n")
+                input()
                 os.killpg(backend_handle.pid, signal.SIGTERM)
