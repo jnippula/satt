@@ -45,11 +45,11 @@ def process_trace(trace_id):
     devnull.close()
 
     if not ret_val == 0:
-        print "Unpack failed, bail out!"
+        print("Unpack failed, bail out!")
         status.update_status(trace_id, status.FAILED, "unpacking failed")
         return
 
-    print "Unpack done in {0}, status={1} ".format(tmp_process_path, ret_val)
+    print("Unpack done in {0}, status={1} ".format(tmp_process_path, ret_val))
     #TODO Update status to DB
 
     #Cleanup orginal file trace file
@@ -93,11 +93,11 @@ def _process_trace(trace_path):
 
 # 3.rd step to process file is to import trace to db
 def _import_trace(trace_path, trace_id):
-    print "Import trace START" + str(trace_path)
+    print("Import trace START" + str(trace_path))
     environment = os.environ.copy()
     #environment['SAT_HOME'] = SAT_HOME
     devnull = open('/dev/null', 'w')
-    print BIN_PATH + "/sat-import " + trace_path
+    print(BIN_PATH + "/sat-import " + trace_path)
     ret_val = call(BIN_PATH + "/sat-import -i " + str(trace_id) + " " + trace_path, env=environment, shell=True, stdout=devnull)
     devnull.close()
 
