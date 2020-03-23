@@ -38,7 +38,7 @@ SAT_ORIGIN_SET_TASK_COMM = 6
 
 
 def print_header(header):
-    print ("%x(-%x) (%x)" % (header['tscp'] & 0xffffffffff, header['tsc_offset'], header['cpu'],)),
+    print(("%x(-%x) (%x)" % (header['tscp'] & 0xffffffffff, header['tsc_offset'], header['cpu'],)), end=' ')
 
 '''
 class sideband_parser_output:
@@ -112,8 +112,8 @@ class sideband_dumper:
 
     def init(self, header, pid, tid, tsc_tick, fsb_mhz, tma_ratio_tsc, tma_ratio_ctc, mtc_freq):
         print_header(header)
-        print "           INIT (%5u, %5u) TSC tick=%u FSB MHz=%u TSC=%u CTC=%u MTC freq=%u" % \
-        (pid, tid, tsc_tick, fsb_mhz, tma_ratio_tsc, tma_ratio_ctc, mtc_freq, )
+        print("           INIT (%5u, %5u) TSC tick=%u FSB MHz=%u TSC=%u CTC=%u MTC freq=%u" % \
+        (pid, tid, tsc_tick, fsb_mhz, tma_ratio_tsc, tma_ratio_ctc, mtc_freq, ))
 
     def process(self, header, origin, pid, ppid, tgid, pgd, name):
         if origin == SAT_ORIGIN_INIT:
@@ -126,7 +126,7 @@ class sideband_dumper:
             o = "--- process"
 
         print_header(header)
-        print "%15s %5u/%5u <- %u, (%x) %s" % (o, pid, tgid, ppid, pgd, name,)
+        print("%15s %5u/%5u <- %u, (%x) %s" % (o, pid, tgid, ppid, pgd, name,))
 
     def mmap(self, header, origin, pid, start, leng, pgoff, path):
         if origin == SAT_ORIGIN_INIT:
@@ -139,9 +139,9 @@ class sideband_dumper:
             o = "--- mmap"
 
         print_header(header)
-        print "%15s %5u, (%x, %x, %x) [%x..%x] %s%s" % \
+        print("%15s %5u, (%x, %x, %x) [%x..%x] %s%s" % \
               (o, pid, start, leng, pgoff, start, start + leng - 1, path,
-               " MATCH" if (start <= self.addr_ and self.addr_ < start + leng) else "", )
+               " MATCH" if (start <= self.addr_ and self.addr_ < start + leng) else "", ))
 
     def munmap(self, header, origin, pid, start, leng):
         if origin == SAT_ORIGIN_MUNMAP:
@@ -152,16 +152,16 @@ class sideband_dumper:
             o = "--- munmap"
 
         print_header(header)
-        print "%15s %5u, (%x, %x)" % (o, pid, start, leng,)
+        print("%15s %5u, (%x, %x)" % (o, pid, start, leng,))
 
     def schedule(self, header, prev_pid, prev_tid, pid, tid, ipt_pkt_count, ipt_pkt_mask, buff_offset, schedule_id):
         print_header(header)
-        print "      schedule %u @ %08x (b-off: %9lx) (mask %1x); (%5u, %5u) -> (%5u, %5u)" % (
-               schedule_id, ipt_pkt_count, buff_offset, ipt_pkt_mask, prev_pid, prev_tid, pid, tid)
+        print("      schedule %u @ %08x (b-off: %9lx) (mask %1x); (%5u, %5u) -> (%5u, %5u)" % (
+               schedule_id, ipt_pkt_count, buff_offset, ipt_pkt_mask, prev_pid, prev_tid, pid, tid))
 
     def schedule_id(self, header, addr, id):
         print_header(header)
-        print "  schedule_id_%d @ %08x" %(id, addr)
+        print("  schedule_id_%d @ %08x" %(id, addr))
 
     def hook(self, header, original_address, new_address, size, wrapper_address, name):
         print_header(header)
@@ -173,7 +173,7 @@ class sideband_dumper:
         print("          module @ %08x, %8d: %s" % (address, size, name,))
 
     def generic(self, header, name, data):
-        printf("%x sb generic %s: %s" % (header['tscp'] & 0xffffffffff, name, data,))
+        print("%x sb generic %s: %s" % (header['tscp'] & 0xffffffffff, name, data,))
 
     def codedump(self, header, addr, size, name):
         print_header(header)
@@ -196,7 +196,7 @@ class path_dumper(sideband_parser_output):
 
     def printp(self):
         for path in self.paths_:
-            print "{0}".format(path)
+            print("{0}".format(path))
 
 
 class generic_dumper(sideband_parser_output):
@@ -263,7 +263,7 @@ class schedule_dumper(sideband_parser_output):
         # printf("%u: process (%u, %s)\n", (unsigned)header.tscp, pid, name)
 
     def mmap(self, header, origin, pid, start, len, pgoff, path):
-        if pid not in self.processes_.keys():
+        if pid not in list(self.processes_.keys()):
             self.processes_[pid] = path
 
     def schedule(self, header, prev_pid, prev_tid, pid, tid, ipt_pkt_count, ipt_pkt_mask, buff_offset, schedule_id):
@@ -304,9 +304,9 @@ class schedule_dumper(sideband_parser_output):
             record = struct.pack('<II', tsc-self.epoc_, tid)
         except:
             # @ TODO
-            print tsc
-            print self.epoc_
-            print (tsc-self.epoc_) & 0xffffffff
+            print(tsc)
+            print(self.epoc_)
+            print((tsc-self.epoc_) & 0xffffffff)
             return
         if self.per_cpu_outputs_[cpu].write(record) != None:
             sys.stderr.write("ERROR: cannot write to output file\n")
@@ -319,7 +319,7 @@ class schedule_dumper(sideband_parser_output):
             sys.stderr.write("ERRROR: cannot open %s for writing\n" % (path.str()))
             sys.exit(EXIT_FAILURE)
 
-        for key, value in self.threads_.iteritems():
+        for key, value in self.threads_.items():
             tid = key
             pid = value
             name = self.processes_[pid]
@@ -429,10 +429,10 @@ def main(argv):
 
     if parsing_ok:
         if not module:
-            print "OK"
+            print("OK")
         sys.exit(0)
     else:
-        print "ERROR"
+        print("ERROR")
         sys.exit(-5)
 
 if __name__ == "__main__":
