@@ -45,8 +45,8 @@ class SattBuildModule:
 
     def action(self):
         if self._variables['sat_path_kernel'] == '':
-            print "No kernel path set.\nPlease call 'satt config' first."
-            print
+            print("No kernel path set.\nPlease call 'satt config' first.")
+            print()
             sys.exit(-1)
 
         parser = argparse.ArgumentParser(description='satt build')
@@ -63,7 +63,7 @@ class SattBuildModule:
             self._control = AdbControl(False)
 
         if not self._args.load:
-            print 'Make SATT kernel-module'
+            print('Make SATT kernel-module')
             os.chdir(os.path.join(self._sat_home, 'src', 'kernel-module'))
             os.environ['SAT_TARGET_BUILD'] = self._variables['sat_target_build']
             os.environ['SAT_TARGET_SOURCE'] = self._variables['sat_target_source']
@@ -76,7 +76,7 @@ class SattBuildModule:
             kmod_path = os.path.join(self._sat_home, 'src', 'kernel-module', 'sat.ko')
             if os.path.isfile(kmod_path):
                 target_os = targetos.get_instance()
-                print '\nCopy SATT kernel-module into target device'
+                print('\nCopy SATT kernel-module into target device')
                 self._control.push_local_file(kmod_path,  target_os.get_tmp_folder() + '/sat.ko')
                 try:
                     self._control.shell_command('rmmod sat', True)
