@@ -48,31 +48,31 @@ class SattTrace:
 
         # SAT_TRACE_LOGGING_METHOD
         if self._variables['sat_trace_logging_method'] == "PTI":
-            print "PTI logger"
+            print("PTI logger")
             self._logger = PtiLogger(self._control)
         elif self._variables['sat_trace_logging_method'] == "USB":
-            print "USB3 logger"
+            print("USB3 logger")
             self._logger = UsbLogger(self._control)
         elif self._variables['sat_trace_logging_method'] == "PANIC":
-            print "PANIC logger"
+            print("PANIC logger")
             self._logger = PanicLogger(self._control)
         else:  # self._variables['sat_trace_logging_method'] == "RAM":
-            print "RAM logger"
+            print("RAM logger")
             self._logger = RamLogger(self._control)
 
-        print "Start tracing"
+        print("Start tracing")
 
         self._logger.initialize()
 
-        raw_input("Press Enter to Start SAT " + self._variables['sat_trace_logging_method'] + "-tracing...")
+        input("Press Enter to Start SAT " + self._variables['sat_trace_logging_method'] + "-tracing...")
         self._logger.start_tracing()
 
-        print "."
-        raw_input("Press Enter to Stop Tracing...")
+        print(".")
+        input("Press Enter to Stop Tracing...")
         self._logger.stop_tracing()
 
         trace_name, trace_path = self._logger.get_trace_name()
         if trace_path:
-            print "Traces Will be stored into " + trace_path + " folder"
+            print("Traces Will be stored into " + trace_path + " folder")
             self._logger.get_data(trace_path, trace_name)
         # TODO: Add envstore.store current config into trace folder for processing usage.
