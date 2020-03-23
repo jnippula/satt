@@ -43,7 +43,7 @@
 #ifdef CONFIG_TSC_BEFORE_SLEEP
 #include <linux/cpuidle.h>
 #endif
-
+#include <linux/seccomp.h>
 
 extern struct task_struct *switch_to_wrapper_ipt(struct task_struct *prev,
 						struct task_struct *next);
@@ -157,10 +157,13 @@ struct kernsym lnw_gpio_set_alt_address;
 struct kernsym gpio_request_address;
 struct kernsym set_task_comm_address;
 struct kernsym intel_idle_address;
+struct kernsym seccomp_prepare_filter;
 void sb_buffer_init(struct work_struct *work);
 
 /* Workqueue for sideband buffer swap */
 struct work_struct		sb_init_work;
+
+static seccomp_filter_count = 0;
 
 u64 satt_rdtsc(void)
 {
@@ -1076,6 +1079,28 @@ static void set_task_comm_wrapper(struct task_struct *task, char *buf, bool exec
 	run(task, buf, exec);
 #endif
 	atomic_dec(&hijack_callers);
+}
+
+struct seccomp_filter *seccomp_prepare_filter_wrapper(struct sock_fprog *fprog)
+{
+	char name[18];
+	struct seccomp_filter *filter;
+	typeof(&seccomp_prepare_filter_wrapper)run;
+
+	atomic_inc(&hijack_callers);
+
+	run = seccomp_prepare_filter.run;
+	filter = run(fprog);
+
+	unsigned long size = filter->prog->len;
+	void* addr = (void*) &filter->prog->bpf_insn[0];
+
+	snprintf(name, 17, "seccomp_fltr%d", seccomp_filter_count++);
+	send_module((unsigned long) addr, (unsigned long) size, name);
+
+	atomic_dec(&hijack_callers);
+
+	return filter;
 }
 
 /*
