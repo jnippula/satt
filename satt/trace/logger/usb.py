@@ -27,14 +27,14 @@ class UsbLogger(Logger):
     def __init__(self, control):
         Logger.__init__(control)
         self._sat_home_path = envstore.store.get_sat_home()
-        print "init"
+        print("init")
     def initialize(self):
-        print "initialize"
+        print("initialize")
     def start_tracing(self):
-        print "start_tracing"
+        print("start_tracing")
     def stop_tracing(self):
-        print "stop_tracing"
+        print("stop_tracing")
     def get_sideband_data(self):
-        print "get_sideband_data"
+        print("get_sideband_data")
     def get_trace_data(self):
-        print "get_trace_data"
+        print("get_trace_data")
