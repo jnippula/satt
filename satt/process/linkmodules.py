@@ -39,13 +39,13 @@ class LinkModules:
         self.sat_target_build = target_build
         self.trace_folder = trace_folder
         self.sideband_dump_bin = os.path.join(self.sat_home,"bin","bin","sat-sideband-dump")
-        print "self.sideband_dump_bin = " + self.sideband_dump_bin
+        print("self.sideband_dump_bin = " + self.sideband_dump_bin)
         self.linux_kernel_path = os.environ.get('SAT_PATH_KERNEL')
         self.kernel_modules_path = os.environ.get('SAT_PATH_MODULES')
-        print "self.sat_target_build = " + self.sat_target_build
-        print "os.environ.get('SAT_PATH_MODULES') = " + os.environ.get('SAT_PATH_MODULES')
-        print "self.linux_kernel_path = " + self.linux_kernel_path
-        print "self.kernel_modules_path = " + self.kernel_modules_path
+        print("self.sat_target_build = " + self.sat_target_build)
+        print("os.environ.get('SAT_PATH_MODULES') = " + os.environ.get('SAT_PATH_MODULES'))
+        print("self.linux_kernel_path = " + self.linux_kernel_path)
+        print("self.kernel_modules_path = " + self.kernel_modules_path)
         self.kernel_module_target_path = os.path.join(self.trace_folder,"binaries","ld-modules")
 
     def getModulesFromSb(self, trace_folder):
@@ -148,19 +148,19 @@ class LinkModules:
         curdir = os.getcwd()
         os.chdir(self.linux_kernel_path)
         ko_link_output = curdir + "/" + self.trace_folder + "/ko-link-output.log"
-        print "Link kernel modules:"
-        print "(Linker output written into '" + ko_link_output + "')"
+        print("Link kernel modules:")
+        print("(Linker output written into '" + ko_link_output + "')")
         if os.path.isfile(ko_link_output):
             os.system("rm " + ko_link_output + " > /dev/null")
         index_count = 0
         module_count = len(modules)
-        for module, addr in modules.items():
+        for module, addr in list(modules.items()):
             index_count += 1
-            print "\rProcessing: " + str(index_count * 100 / module_count).rjust(3," ") + "%",
+            print("\rProcessing: " + str(index_count * 100 / module_count).rjust(3," ") + "%", end=' ')
             sys.stdout.flush()
             if ignore_sat_module and module == "sat":
                 continue
-            if module in modules_in_fs.keys():
+            if module in list(modules_in_fs.keys()):
                 os.system("echo '\n============================================================================' >> " + ko_link_output + " 2>&1")
                 os.system("echo '" + modules_in_fs[module] + " : " + module + " = " + addr + "' >> " + ko_link_output + " 2>&1")
                 os.system("echo '============================================================================' >> " + ko_link_output + " 2>&1")
@@ -173,4 +173,4 @@ class LinkModules:
                         addr + " " + self.kernel_modules_path + modules_in_fs[module] + " -o " + self.kernel_module_target_path +
                         modules_in_fs[module] + " >> " + ko_link_output + " 2>&1")
         os.chdir(curdir)
-        print ""
+        print("")
