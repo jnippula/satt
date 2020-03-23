@@ -40,11 +40,11 @@ class sideband_binary_dumper(sideband_parser_output):
         self.lines_ = sb_lines
 
     def header_and_binary(self, header, binary):
-        if header['tscp'] in self.lines_.keys():
-            print "WARNING: duplicate timestamps in sideband streams!!!"
+        if header['tscp'] in list(self.lines_.keys()):
+            print("WARNING: duplicate timestamps in sideband streams!!!")
             while True:
                 header['tscp'] += 1
-                if header['tscp'] not in self.lines_.keys():
+                if header['tscp'] not in list(self.lines_.keys()):
                     break;
         self.lines_[header['tscp']] = binary
 
