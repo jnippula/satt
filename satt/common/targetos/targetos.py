@@ -32,8 +32,8 @@ def get_instance():
     if os_instance is None:
         os = envstore.get_instance().get_variable('sat_os')
         if os < 0:
-            print "\nNo target OS selected"
-            print "Please run 'satt config'"
+            print("\nNo target OS selected")
+            print("Please run 'satt config'")
             sys.exit(-1)
         else:
             if os == OsHelper.Linux:
@@ -49,7 +49,7 @@ def get_instance():
                 from satt.common.targetos.os_yocto import YoctoOs
                 os_instance = YoctoOs()
             else:
-                print "ERROR: Unsupported target OS type (" + os + ")"
+                print("ERROR: Unsupported target OS type (" + os + ")")
                 sys.exit(-1)
     return os_instance
 
@@ -66,7 +66,7 @@ class OsData:
 
 
 class OsHelper:
-    Linux, Android, ChromeOS, YoctoOs = range(4)
+    Linux, Android, ChromeOS, YoctoOs = list(range(4))
     osdata = {Linux: OsData('Linux', ['SSH', 'SHELL'], False),
               Android: OsData('Android', ['ADB'], True),
               ChromeOS: OsData('ChromeOS', ['SSH', 'SHELL'], False),
@@ -169,7 +169,7 @@ class TargetOs(object):
                 print(helper.color.BOLD + '   ERROR: Path does not found?' + helper.color.END)
 
             # Pass trought, some path was wrong
-            selection = raw_input("   Do you want to give that path again? [Y/n] ")
+            selection = input("   Do you want to give that path again? [Y/n] ")
             if selection == 'Y' or selection == 'y' or selection == None or selection == '':
                 return False
             return True
@@ -200,4 +200,4 @@ class TargetOs(object):
 
     def debug_print(self, string):
         if self._debug:
-            print string
+            print(string)
