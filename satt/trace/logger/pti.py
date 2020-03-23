@@ -77,18 +77,18 @@ class PtiLogger(Logger):
     def initialize(self):
         self._debug_print("PTILogger::initialize")
         if self._t32api is None:
-            print "T32Api not available!"
+            print("T32Api not available!")
             sys.exit(1)
 
         if self.args.disable_sleep:
-            print "Disabled C6 sleep state before tracing"
+            print("Disabled C6 sleep state before tracing")
             self._disable_sleep()
         else:
             if NAG_OPTIONS:
-                print "C6 sleep state have not been disabled, use -d / --disable_sleep"
+                print("C6 sleep state have not been disabled, use -d / --disable_sleep")
 
         if self.args.sbpti:
-            print "Setup Sideband data to come trough PTI"
+            print("Setup Sideband data to come trough PTI")
             self._kernel_module_parameters += "sideband_log_method=0 "
         else:
             self._kernel_module_parameters += "sideband_log_method=1 "
@@ -98,56 +98,56 @@ class PtiLogger(Logger):
 
         line = self.control.shell_command("getprop ro.board.platform")
         if not line:
-            print "SoC info not found from device!!"
+            print("SoC info not found from device!!")
             sys.exit(1)
         else:
             self._target_platform = line.strip()
-            print "product: " + self._target_platform
+            print("product: " + self._target_platform)
             if self._target_platform == 'platformA':
                 soc_type = 'PlatASoC'
             else:
-                print "Unsupported SoC type: " + self._target_platform
+                print("Unsupported SoC type: " + self._target_platform)
                 sys.exit(1)
 
         if self.args.init:
-            print "Init SoC settings"
+            print("Init SoC settings")
             if not self.args.pti_width:
                 self.args.pti_width = '16'
-                print "pti 16bit"
+                print("pti 16bit")
             elif self.args.pti_width != '4' and self.args.pti_width != '8' and self.args.pti_width != '16':
-                print "ERROR: valid values for -w --pti_width are 4,8,16"
+                print("ERROR: valid values for -w --pti_width are 4,8,16")
                 sys.exit()
             else:
-                print "pti "+self.args.pti_width+"bit"
+                print("pti "+self.args.pti_width+"bit")
 
             if soc_type == 'PlatASoC':
                 self._t32api.run_cmd('Sys.Attach')
                 time.sleep(0.2)
                 self._t32api.run_cmd('DO '+ os.path.join(self._t32_scripts_directory, 'sat_init_pt_PlatASoC.cmm'))
             else:
-                print "run sat_init_ltb.cmm"
+                print("run sat_init_ltb.cmm")
                 self._t32api.run_cmd('do '+ os.path.join(self._t32_scripts_directory,'sat_init_ltb.cmm ')+soc_type)
                 time.sleep(4)
-                print "run sat_init_pt.cmm"
+                print("run sat_init_pt.cmm")
                 self._t32api.run_cmd('do '+ os.path.join(self._t32_scripts_directory, 'sat_init_pt.cmm ') +
                                      args.pti_width+' '+soc_type+' '+ffd_debug)
                 #t32api.run_cmd('do '+self._t32_scripts_directory+'sat_init_pt.cmm')
                 time.sleep(4)
         else:
             if NAG_OPTIONS:
-                print "Target init configuration was not set, PTI defaults to 16bit, -i 8 to change 8bit"
+                print("Target init configuration was not set, PTI defaults to 16bit, -i 8 to change 8bit")
 
         if self.args.autofocus:
-            print "Running autofocus"
+            print("Running autofocus")
             self._t32api.run_cmd('do '+self._t32_scripts_directory+'sat_autofocus.cmm')
             time.sleep(6)
         else:
             if NAG_OPTIONS:
-                print "Autofocus was not done, use -a / --autofocus to do autofocus before tracing"
+                print("Autofocus was not done, use -a / --autofocus to do autofocus before tracing")
 
         if not self.args.sbpti:
             if NAG_OPTIONS:
-                print "sideband data trough PTI was not wanted, use -s / --sbpti to enable"
+                print("sideband data trough PTI was not wanted, use -s / --sbpti to enable")
 
         time.sleep(2)
 
@@ -155,9 +155,9 @@ class PtiLogger(Logger):
             raise Exception("T32: System is not running or T32 is not attached to device")
 
         if self.args.sbpti:
-            print "."
+            print(".")
             #print self.control.shell_command("""echo 1 > /sys/kernel/debug/sat/sideband_to_pti""")
-            print "."
+            print(".")
 
         # Initialize Logger base class
         Logger.initialize()
@@ -183,7 +183,7 @@ class PtiLogger(Logger):
             self._os.get_os_data(self.trace_path)
             self.dump_kernel()
             self.dump_kernel_modules()
-            print "All Done!"
+            print("All Done!")
             self.instructions_for_processing()
 
     def get_trace_data(self):
@@ -195,12 +195,12 @@ class PtiLogger(Logger):
 
         # TODO HowTo check How Many cores from Trace32
         if self.args.sbpti or self.args.rawstp:
-            print "PTI trace     : ",
+            print("PTI trace     : ", end=' ')
             sys.stdout.flush()
             raw_stma_path = os.path.join(self.trace_path, 'stma.raw')
             self._t32api.run_cmd('a.access denied')
             self._t32api.run_cmd('stma.export.traceport ' + raw_stma_path + ' %BINARY')
-            print "stma.raw"
+            print("stma.raw")
         else:
 
             self._t32api.run_cmd('a.access denied')
@@ -209,8 +209,8 @@ class PtiLogger(Logger):
                 #vcpu_map_file = self._t32_dir + '/vcpu_map_' + self._target_platform
                 vcpu_map_file = os.path.join(self._t32_dir, 'config', 'vcpu_map_' + self._target_platform)
                 if self._debug:
-                    print "Opening file:"
-                    print vcpu_map_file
+                    print("Opening file:")
+                    print(vcpu_map_file)
                 if os.path.isfile(vcpu_map_file):
                     vcpu_mapping = True
                     vcpu_f = open(vcpu_map_file, 'r')
@@ -224,13 +224,13 @@ class PtiLogger(Logger):
             # check online cores
             line = self.control.shell_command('cat /sys/devices/system/cpu/online').strip()
             if not line:
-                print "ERROR: Getting online CPUs failed!"
+                print("ERROR: Getting online CPUs failed!")
                 sys.exit(1)
             else:
                 vcore = 0
                 cores = line.rstrip().split(',')
                 if not self._debug:
-                    print "Get raw trace from device: ",
+                    print("Get raw trace from device: ", end=' ')
                 for core in cores:
                     match = re.search("(\d+)-(\d+)", core)
                     if match:
@@ -240,10 +240,10 @@ class PtiLogger(Logger):
                             else:
                                 vcore = tmpcore
                             if self._debug:
-                                print ('a.export.traceport ' + os.path.join(self.trace_path, 'cpu'+str(tmpcore)+'.bin') +
+                                print('a.export.traceport ' + os.path.join(self.trace_path, 'cpu'+str(tmpcore)+'.bin') +
                                        ' /CoreBYTESTREAM /core '+str(vcore))
                             else:
-                                print "cpu{0} ".format(str(vcore)),
+                                print("cpu{0} ".format(str(vcore)), end=' ')
                             self._t32api.run_cmd('a.export.traceport ' +
                                                  os.path.join(self.trace_path, 'cpu'+str(tmpcore +'.bin') +
                                                  ' /CoreBYTESTREAM /core '+str(vcore)))
@@ -253,14 +253,14 @@ class PtiLogger(Logger):
                         else:
                             vcore = core
                         if self._debug:
-                            print ('a.export.traceport ' + os.path.join(self.trace_path, 'cpu'+str(core)+'.bin') +
+                            print('a.export.traceport ' + os.path.join(self.trace_path, 'cpu'+str(core)+'.bin') +
                                    ' /CoreBYTESTREAM /core '+str(vcore))
                         else:
-                            print "cpu{0} ".format(str(vcore)),
+                            print("cpu{0} ".format(str(vcore)), end=' ')
                         self._t32api.run_cmd('a.export.traceport ' + os.path.join(self.trace_path,
                                              'cpu'+str(core)+'.bin') + ' /CoreBYTESTREAM /core '+str(vcore))
                 if not self._debug:
-                    print ""
+                    print("")
 
     def _disable_sleep(self):
         """ Disable sleep from the Target device
