@@ -74,7 +74,7 @@ class SattProcess:
     # ===============================================#
     def action(self):
         if not os.path.exists(self._os._trace_path):
-            print "ERROR: SATT trace '" + self._os._trace_path + "' not found!"
+            print("ERROR: SATT trace '" + self._os._trace_path + "' not found!")
             return
 
         if self._args.rtit:
@@ -109,10 +109,10 @@ class SattProcess:
             subprocess.call(os.path.join(self._post_process_bin_path, 'pack') + ' ' + self._os._trace_path + " | tee -a " +
                             os.path.join(self._os._trace_path, self._os._trace_path + '-process.log'), shell=True)
         else:
-            print "**************************************"
-            print "**    Uups, Processing Failed       **"
-            print "**    - please, try to trace again  **"
-            print "**************************************"
+            print("**************************************")
+            print("**    Uups, Processing Failed       **")
+            print("**    - please, try to trace again  **")
+            print("**************************************")
 
     # ===============================================#
     def ParseArguments(self):
@@ -252,13 +252,13 @@ class SattProcess:
                                      IGNORE_SAT_MODULE_ON_PROCESSING)
             if retstr == "no_dump":
                 # dump files not found, perform linking
-                print "No dump files found, perform linking for modules"
+                print("No dump files found, perform linking for modules")
                 lm = LinkModules(self._variables['sat_target_build'], os.path.realpath(self._os._trace_path))
                 lm.linkModules(self._official_build, IGNORE_SAT_MODULE_ON_PROCESSING)
 
     # ===============================================#
     def AdjustKernelVma(self):
-        print "AdjustKernelVma"
+        print("AdjustKernelVma")
         kernel_address = 0
         python_path = 'python'
 
@@ -315,7 +315,7 @@ class SattProcess:
     def DecodeRawPtiData(self):
         if not os.path.isfile(os.path.join(self._os._trace_path, 'cpu0.bin')):
             if os.path.isfile(os.path.join(self._os._trace_path, 'stma.raw')):
-                print 'Decode cpu rtit streams from PTI stream'
+                print('Decode cpu rtit streams from PTI stream')
                 savedPath_ = os.getcwd()
                 os.chdir(self._os._trace_path)
                 size_ = os.path.getsize('stma.raw')
@@ -350,7 +350,7 @@ class SattProcess:
             sat_collection_stats_version = 'sat-ipt-collection-stats'
             sat_collection_tasks_version = 'sat-ipt-collection-tasks'
 
-        print 'MAKING COLLECTION ' + collection_file
+        print('MAKING COLLECTION ' + collection_file)
 
         command = (os.path.join(self._post_process_bin_path, collection_make_version) +
                    ' -s ' + os.path.join(self._os._trace_path, 'sideband.bin'))
@@ -367,7 +367,7 @@ class SattProcess:
 
 
         # Building execution model
-        print 'BUILDING EXECUTION MODEL ON COLLECTION ' + collection_file
+        print('BUILDING EXECUTION MODEL ON COLLECTION ' + collection_file)
 
         python_path = 'python'
 
@@ -408,8 +408,8 @@ class SattProcess:
         # Execute: BUILD MODELS
         ret = subprocess.call(command, shell=True)
 
-        print "INTERMEDIATE PROCESSING",
-        print "AND SHRINKING MODEL" if not debug else ''
+        print("INTERMEDIATE PROCESSING", end=' ')
+        print("AND SHRINKING MODEL" if not debug else '')
 
         tid_files = glob.glob(os.path.join(self._os._trace_path, self._os._trace_path + '-*.model'))
         tid_files.sort()
@@ -435,7 +435,7 @@ class SattProcess:
         subprocess.call(command, shell=True)
 
         if not debug:
-            print "MERGING MODEL"
+            print("MERGING MODEL")
             command = (os.path.join(self._post_process_bin_path, 'sat-merge') +
                        ' ' + os.path.join(self._os._trace_path, self._os._trace_path + '-*.sat') +
                        ' > ' + os.path.join(self._os._trace_path, self._os._trace_path + '.sat0'))
@@ -459,7 +459,7 @@ class SattProcess:
                        os.path.join(self._os._trace_path, self._os._trace_path + '.satp'))
             subprocess.call(command, shell=True)
 
-            print "REMOVING PER-PROCESS MODELS"
+            print("REMOVING PER-PROCESS MODELS")
             sat_files = glob.glob(os.path.join(self._os._trace_path, self._os._trace_path + '-*.sat'))
             for f in sat_files:
                 os.remove(f)
@@ -467,7 +467,7 @@ class SattProcess:
     # ===============================================#
     def DemangleSymbols(self):
         # demangle symbol names in satsyms file
-        print "demangle symbols.."
+        print("demangle symbols..")
         operators = ['<<=', '>>=', '->*', '<<', '>>', '<=', '>=', '->', '>', '<']
         satsym_file = self._os._trace_path + '/' + self._os._trace_path + '.satsym'
         tmpfile = self._os._trace_path + '/' + self._os._trace_path + '.satsym_'
@@ -518,7 +518,7 @@ class SattProcess:
                                 ridx = dec.rfind('<', 0, ridx)
                             if ridx < 0:
                                 demagle_success = False
-                                print "Warning: template parenthesis does not match!!! (" + str(sid) + ")"
+                                print("Warning: template parenthesis does not match!!! (" + str(sid) + ")")
                                 break
                             dec = dec[:ridx] + ';' * (idx - ridx) + dec[idx:]
                         if demagle_success:
