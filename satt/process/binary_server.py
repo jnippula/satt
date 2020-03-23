@@ -158,9 +158,9 @@ def main():
             debug = None
 
         if debug:
-            print response + ";" + debug.rstrip()
+            print(response + ";" + debug.rstrip())
         else:
-            print response + ";" + response
+            print(response + ";" + response)
         return
 
     elif ( SATT_CONTROL_BUS == 'ADB' and adb is not None):
@@ -172,7 +172,7 @@ def main():
             return
         root = ''
         while (root is not None) and (root.find('uid=0(root)') == -1):
-            if adb.set_adb_root.func_code.co_argcount == 1:
+            if adb.set_adb_root.__code__.co_argcount == 1:
                 root = adb.set_adb_root()
             else:
                 root = adb.set_adb_root(1)
@@ -186,7 +186,7 @@ def main():
             # control.get_remote_file(args.NEEDLE, host_file_name)
             adb.get_remote_file(args.NEEDLE, os.path.dirname(host_file_name))
             if os.path.isfile(host_file_name):
-                print host_file_name.rstrip()
+                print(host_file_name.rstrip())
             return
 
     elif SATT_CONTROL_BUS == 'SSH' and SATT_SSH_IP:
