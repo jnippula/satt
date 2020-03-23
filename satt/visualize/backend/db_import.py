@@ -228,7 +228,7 @@ def helperCreateAvgGraphTable(schema, cpux):
     else:
         sql_action = """insert into """ + schema + """.graph """
 
-    print "cpu =", cpux
+    print("cpu =", cpux)
     curs.execute(sql_action + """
     select * from (
     select gen_ts, thread_id, sum(part2)::int, cpu, count(*) over (partition by gen_ts/7980) as ts_count
@@ -347,7 +347,7 @@ def main():
                         help='Trace folder path')
 
     results = parser.parse_args()
-    print 'path_value       =', results.trace_path
+    print('path_value       =', results.trace_path)
 
     if os.path.isabs(results.trace_path):
         TRACE_FOLDER_PATH = os.path.realpath(results.trace_path + '/..')
@@ -358,8 +358,8 @@ def main():
     files = glob.glob('./' + results.trace_path + '/*.sat0')
 
     if not len(files):
-        print "\n Can't find SAT-files from ./" + results.trace_path + '/ folder'
-        print ""
+        print("\n Can't find SAT-files from ./" + results.trace_path + '/ folder')
+        print("")
         parser.print_help()
         return
 
@@ -402,32 +402,32 @@ def main():
         curs.execute('DROP SCHEMA IF EXISTS ' + schema + ';')
         curs.execute('CREATE SCHEMA ' + schema + ';')
 
-        print "*************************************\n"
-        print "Import Data"
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        print("*************************************\n")
+        print("Import Data")
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         importCSV(insert_id, trace_name, trace_path)
-        print "*************************************\n"
-        print "create Indexes"
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        print("*************************************\n")
+        print("create Indexes")
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         createIndexs(schema)
-        print "*************************************\n"
-        print "Create colors for prosesses and threads"
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        print("*************************************\n")
+        print("Create colors for prosesses and threads")
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         createColors(schema)
-        print "*************************************\n"
-        print "Calculate avg graph table"
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        print("*************************************\n")
+        print("Calculate avg graph table")
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         createAvgGraphTable(schema)
-        print "*************************************\n"
-        print "Dig some trace info for the trace"
+        print("*************************************\n")
+        print("Dig some trace info for the trace")
         digTraceInfo(schema, insert_id, results.trace_path)
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
-        print "*************************************\n"
-        print "All Done"
-        print strftime("%Y-%m-%d %H:%M:%S", gmtime())
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+        print("*************************************\n")
+        print("All Done")
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
         status.update_status(insert_id, status.READY, results.description)
     except Exception as e:
-        print "Import Failed: " + str(e)
+        print("Import Failed: " + str(e))
         status.update_status(insert_id, status.FAILED, 'Importing to DB Failed!')
         sys.exit(1)
 
