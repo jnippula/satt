@@ -52,6 +52,9 @@ class EnvStore:
         self._configs.append(self._variables)  # conf[0]: current setup
         self._configs.append(self._variables.copy())  # conf[1]: empty setup
 
+    def cmp(self, a, b):
+        return (a > b) - (a < b)
+
     def load(self):
         self._conf_path = os.path.join(self._sat_home, 'conf', 'config.env')
         if os.path.exists(self._conf_path):
@@ -86,7 +89,7 @@ class EnvStore:
             # skip the first config as it is the current one
             if idx == 0:
                 continue
-            if cmp(conf, cnf) == 0:
+            if conf.items() == cnf.items():
                 identical = True
                 break
         if identical is False:
