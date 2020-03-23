@@ -59,15 +59,15 @@ class EnvStore:
             self._variables = self._configs[0]
 
     def _set_default_values(self, variables):
-        if 'sat_trace_logging_method' not in self._variables.keys():
+        if 'sat_trace_logging_method' not in list(self._variables.keys()):
             variables['sat_trace_logging_method'] = ''
-        if 'sat_target_source' not in variables.keys():
+        if 'sat_target_source' not in list(variables.keys()):
             variables['sat_target_source'] = ''
-        if 'sat_target_build' not in variables.keys():
+        if 'sat_target_build' not in list(variables.keys()):
             variables['sat_target_build'] = ''
-        if 'sat_control_bus' not in variables.keys():
+        if 'sat_control_bus' not in list(variables.keys()):
             variables['sat_control_bus'] = ''
-        if 'sat_login_id' not in variables.keys():
+        if 'sat_login_id' not in list(variables.keys()):
             variables['sat_login_id'] = ''
         return variables
 
@@ -78,7 +78,7 @@ class EnvStore:
             print ("WARNNING: SAT envsetup conf file path not set")
 
     def add_config(self, conf):
-        for key in conf.keys():
+        for key in list(conf.keys()):
             self._variables[key] = conf[key]
         # Check whether the same config already exists
         identical = False
@@ -97,7 +97,7 @@ class EnvStore:
 
     def edit_config(self, idx, conf):
         if idx > 1 and idx < len(self._configs):
-            for key in conf.keys():
+            for key in list(conf.keys()):
                 self._configs[idx][key] = self._variables[key] = conf[key]
             pickle.dump(self._configs, open(self._conf_path, 'wb'), pickle.HIGHEST_PROTOCOL)
             return True
@@ -114,7 +114,7 @@ class EnvStore:
 
     def get_config(self, idx):
         if idx < (len(self._configs)):
-            for key in self._configs[idx].keys():
+            for key in list(self._configs[idx].keys()):
                 self._variables[key] = self._configs[idx][key]
             pickle.dump(self._configs, open(self._conf_path, 'wb'), pickle.HIGHEST_PROTOCOL)
         return self._set_default_values(self._variables.copy())
@@ -123,14 +123,14 @@ class EnvStore:
         return self._set_default_values(self._variables.copy())
 
     def set_variable(self, key, value):
-        if key in self._variables.keys():
+        if key in list(self._variables.keys()):
             self._variables[key] = value
             return True
         else:
             return False
 
     def get_variable(self, key):
-        if key in self._variables.keys():
+        if key in list(self._variables.keys()):
             return self._variables[key]
         else:
             return None
