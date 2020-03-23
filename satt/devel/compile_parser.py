@@ -18,13 +18,13 @@
 import os
 import sys
 
-print "***********************************"
-print "**** compile update SAT-parser ****"
-print "***********************************"
+print("***********************************")
+print("**** compile update SAT-parser ****")
+print("***********************************")
 old_dir = os.getcwd()
 sat_home = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..'))
 os.chdir(os.path.join(sat_home, 'src', 'parser', 'post-processor'))
-print 'compile...'
+print('compile...')
 clear_flag = ''
 if len(sys.argv) > 1:
     if sys.argv[1] == '-c' or sys.argv[1] == '-C':
@@ -40,4 +40,4 @@ os.chdir(os.path.join(sat_home, 'satt', 'process'))
 os.system('tar xzf ' + sat_home + '/src/parser/post-processor/sat-post-processor-binaries.tgz')
 
 os.chdir(old_dir)
-print 'done.'
+print('done.')
