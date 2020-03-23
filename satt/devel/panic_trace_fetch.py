@@ -38,10 +38,10 @@ args = parser.parse_args()
 def CrashlogKey(s):
     return int(s[8:])
 
-print "... beginning"
+print("... beginning")
 
-print "set adb to rootmode"
-print adb.set_adb_root(1)
+print("set adb to rootmode")
+print(adb.set_adb_root(1))
 adb.wait_for_device()
 root = adb.shell_command("id")
 #print root
@@ -49,13 +49,13 @@ root = adb.shell_command("id")
 path = os.getcwd()
 name = args.tracename
 if not (name and os.path.exists(path + '/' + name)):
-    name = raw_input("Enter <<trace name>> to to fetch panic trace? :")
+    name = input("Enter <<trace name>> to to fetch panic trace? :")
 if name:
     # Save the Traces
     path = path + '/' + name
 
     if not os.path.exists(path):
-        print "Pre-trace info was not found from " + path
+        print("Pre-trace info was not found from " + path)
         sys.exit()
 
     # create symbols dir for ART binary support
@@ -74,20 +74,20 @@ if name:
         gbuffer_console = False
         gbuffer_bin = False
         for crash in crashfiles:
-            print crash
+            print(crash)
             if crash.startswith('emmc_ipanic_gbuffer'):
                 gbuffer_bin = crash
             if crash.startswith('emmc_ipanic_console'):
                 gbuffer_console = crash
 
         if not (gbuffer_console and gbuffer_bin):
-            print "gbuffer files were not found from {0} folder".format("/storage/sdcard0/logs/" + crashlogs[-1])
+            print("gbuffer files were not found from {0} folder".format("/storage/sdcard0/logs/" + crashlogs[-1]))
             sys.exit()
 
-        print "Fetch " + gbuffer_console + " from device"
+        print("Fetch " + gbuffer_console + " from device")
         p = os.popen("adb pull " + "/storage/sdcard0/logs/" + crashlogs[-1] + "/" + gbuffer_console + " " + path)
         p.close()
-        print "Fetch " + gbuffer_bin + " from device"
+        print("Fetch " + gbuffer_bin + " from device")
         p = os.popen("adb pull " + "/storage/sdcard0/logs/" + crashlogs[-1] + "/" + gbuffer_bin + " " + path)
         p.close()
 
@@ -127,7 +127,7 @@ if name:
             gbuffer['sb'].tofile(sb_path)
 
     else:
-        print "Crashlog not found"
+        print("Crashlog not found")
 
 else:
-    print "Trace discarded"
+    print("Trace discarded")
