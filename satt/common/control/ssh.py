@@ -37,7 +37,7 @@ class SshControl(Control):
         self._ip_address = ip_address
         self._get_login_id()
         if sys.platform.startswith('win'):
-            print "Windows SSH not support yet!"
+            print("Windows SSH not support yet!")
             sys.exit(-1)
             # self._ssh_command = "plink.exe"
             # self._scp_command = "pscp.exe"
