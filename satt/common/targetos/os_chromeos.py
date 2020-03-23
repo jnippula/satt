@@ -90,4 +90,4 @@ class ChromeOs(TargetOs):
         build_info['kernel_version'] = ' '.join(uname)
 
         pickle.dump(build_info, open(os.path.join(self._trace_path, "build_info.p"), "wb"), pickle.HIGHEST_PROTOCOL)
-        print "Get build info from the device"
+        print("Get build info from the device")
