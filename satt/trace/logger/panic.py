@@ -89,16 +89,16 @@ class PanicLogger(Logger):
 
             Logger.start_tracing(self)
 
-            print ""
-            print "Panic tracing activated"
-            print "If panic happens, wait 10s and reboot device."
-            print ""
-            print "When device boot up run following command:"
-            print "sat-panic-fetch " + self.trace_name
+            print("")
+            print("Panic tracing activated")
+            print("If panic happens, wait 10s and reboot device.")
+            print("")
+            print("When device boot up run following command:")
+            print("sat-panic-fetch " + self.trace_name)
 
             sys.exit(0)
         else:
-            print "Panic Tracer did not get started"
+            print("Panic Tracer did not get started")
 
     def stop_tracing(self):
         return
