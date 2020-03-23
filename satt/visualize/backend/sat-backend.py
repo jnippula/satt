@@ -106,7 +106,7 @@ def screenshot(trace_id):
     # backend tmp directory path
     tmp_path = os.path.join(SAT_HOME, 'satt', 'visualize', 'backend', 'tmp')
     trace_screenshot = tmp_path + str(trace_id) + ".png"
-    print trace_screenshot
+    print(trace_screenshot)
 
     # check if picture exists in tmp file already
     if not os.path.isfile(trace_screenshot):
@@ -158,15 +158,15 @@ def upload_resume():
 @app.route('/api/1/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
-        for key, file in request.files.iteritems():
+        for key, file in request.files.items():
             if file:
                 filename = secure_filename(request.form['flowFilename'])
                 chunks = int(request.form['flowTotalChunks'])
                 chunk = int(request.form['flowChunkNumber'])
                 if DEBUG:
-                    print "chunks {0} of chunk {1}".format(chunks, chunk)
-                    print '***> ' + str(filename) + ' <***'
-                    print str(request.form['flowFilename'])
+                    print("chunks {0} of chunk {1}".format(chunks, chunk))
+                    print('***> ' + str(filename) + ' <***')
+                    print(str(request.form['flowFilename']))
 
                 file.save(os.path.join(UPLOAD_FOLDER, filename + '_' + str(chunk).zfill(3)))
 
@@ -182,13 +182,13 @@ def upload():
                     for tmp_files in glob.glob(os.path.join(UPLOAD_FOLDER, filename + '_*')):
                         os.remove(tmp_files)
 
-                    print 'Quenue done'
+                    print('Quenue done')
                     # Setup up the work Queue
                     trace_id = status.create_id(os.path.join(UPLOAD_FOLDER, filename), filename)
                     if not sys.platform.startswith('win'):
                         result = queue.enqueue(worker.process_trace, trace_id, timeout=7200)
                         if not result:
-                            print "Queuenue failed"
+                            print("Queuenue failed")
 
                     return json.dumps({"OK": 1, "info": "All chunks uploaded successful."})
 
@@ -212,13 +212,13 @@ def trace_id(id):
 
 @app.route('/trace/components/<string:endpoint>/<string:endpoint2>', methods=['GET', 'POST', 'PATCH', 'PUT', 'DELETE'])
 def components(endpoint, endpoint2):
-    print '/components/' + endpoint + '/' + endpoint2
+    print('/components/' + endpoint + '/' + endpoint2)
     return app.send_static_file('components/' + endpoint + '/' + endpoint2)
 
 
 @app.route('/admin/views/admin/<string:endpoint>', methods=['GET', 'POST', 'PATCH', 'PUT', 'DELETE'])
 def admin_view(endpoint):
-    print '/views/admin/' + endpoint
+    print('/views/admin/' + endpoint)
     return app.send_static_file('views/admin/' + endpoint)
 
 
@@ -234,7 +234,7 @@ def get_tsc_tick(schema):
     if res[0]:
         named_cur.execute("SELECT value from " + schema + ".info WHERE key = 'TSC_TICK'")
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         tsc_tick = named_cur.fetchone()
         return tsc_tick[0]
     else:
@@ -281,7 +281,7 @@ def saveBookmark():
                               (data['traceId'], data['title'], data['description'], data['data'],))
         insertedId = named_cur.fetchone()
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
     return json.dumps(insertedId)
 
 
@@ -309,7 +309,7 @@ def traceinfo(traceId):
     if res[0]:
         named_cur.execute("""SELECT * FROM """+schema+""".info order by key""")
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
 
     if not rows:
@@ -365,7 +365,7 @@ def graph_insflownode(traceId, pid, start, end, level):
         rows = cur.fetchall()
 
         if DEBUG:
-            print cur.query
+            print(cur.query)
     else:
         cur.execute("""SELECT count(*)
             FROM """+schema+""".ins
@@ -382,7 +382,7 @@ def graph_insflownode(traceId, pid, start, end, level):
         rows = cur.fetchall()
 
         if DEBUG:
-            print cur.query
+            print(cur.query)
 
     data = []
     for r in rows:
@@ -407,7 +407,7 @@ def graph_insflow(traceId, pid, start, end):
     min_level_in_set = cur.fetchone()
 
     if DEBUG:
-        print cur.query
+        print(cur.query)
 
     """ CALCULATE DURATION FOR THE CALLS
     SELECT CASE WHEN call = 'c' THEN lead(ts) over(partition by level order by ts)
@@ -421,7 +421,7 @@ def graph_insflow(traceId, pid, start, end):
     cur.execute("""select id from """+schema+""".symbol where symbol = 'overflow' """,(pid,start,end,))
     overflow_symbol_id = cur.fetchone()
     if overflow_symbol_id:
-        print "OVERFLOW ID"
+        print("OVERFLOW ID")
         overflow_symbol_id = overflow_symbol_id[0]
 
         # get timestamps for the overflows
@@ -432,7 +432,7 @@ def graph_insflow(traceId, pid, start, end):
 
         overflow_rows = []
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
 
         overflow_rows = named_cur.fetchall()
 
@@ -510,12 +510,12 @@ def statistics_groups_thread(traceId, start, end):
         ) s1""",(start,end,start,end,))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
         rows.insert(0,{"id":"0", "percent":"100","name":"Showing all Threads"})
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         return jsonify({"ERROR":100})
 
 ################################################################
@@ -536,13 +536,13 @@ def statistics_groups_process(traceId, start, end):
         ) s1""",(start,end,start,end,))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
 
         rows = named_cur.fetchall()
         rows.insert(0,{'id':0, 'percent':100,'name':'Showing all Processes'})
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         return jsonify({"ERROR":100})
 
 ################################################################
@@ -564,12 +564,12 @@ def statistics_groups_module(traceId, start, end):
             limit 100 )s1""",(start,end,start,end,))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
         rows.insert(0,{"id":"0", "percent":'100',"name":"Showing all Modules"})
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print "problem".format(e)
+    except Exception as e:
+        print("problem".format(e))
 
 ################################################################
 #
@@ -627,11 +627,11 @@ def statistics_process(traceId, start, end, tgid):
             limit 1000""",(tgid,start,end))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print "problem".format(e)
+    except Exception as e:
+        print("problem".format(e))
 
 ################################################################
 #
@@ -689,11 +689,11 @@ def statistics_thread(traceId, start, end, pid):
             limit 1000""",(pid,start,end))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print "problem".format(e)
+    except Exception as e:
+        print("problem".format(e))
 
 ################################################################
 #
@@ -751,11 +751,11 @@ def statistics_module(traceId, start, end, module_id):
             limit 1000""",(module_id,start,end))
 
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         rows = named_cur.fetchall()
         return json.dumps({'data':rows}, use_decimal=True)
-    except Exception, e:
-        print "problem".format(e)
+    except Exception as e:
+        print("problem".format(e))
 
 ################################################################
 #
@@ -782,11 +782,11 @@ def statistics_callers(traceId, start, end, tgid, symbol_id):
             limit 50
             """,(tgid,symbol_id,symbol_id,))
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         return "hello"
         #return jsonify({"data":rows})
-    except Exception, e:
-        print "problem".format(e)
+    except Exception as e:
+        print("problem".format(e))
 
 ################################################################
 #
@@ -801,8 +801,8 @@ def delete_trace(traceId):
         cur.execute("DELETE FROM public.traces WHERE id = %s",(traceId,))
         db.commit()
         return jsonify({"status":"ok"})
-    except Exception, e:
-        print "error ".format(e)
+    except Exception as e:
+        print("error ".format(e))
         return jsonify({"status":"error"})
 
 ################################################################
@@ -816,11 +816,11 @@ def post_trace(traceId):
     try:
         for key in js:
             cur.execute("UPDATE public.traces SET " + key + "=%s WHERE id = %s", (js[key], traceId,))
-            print key, 'corresponds to', js[key]
+            print(key, 'corresponds to', js[key])
             db.commit()
         return jsonify({"status":"ok"})
-    except Exception, e:
-        print "error ".format(e)
+    except Exception as e:
+        print("error ".format(e))
         return jsonify({"status":"error"})
 
 ################################################################
@@ -860,7 +860,7 @@ def getFullAvgGraphPerCpu(schema, cpu, start_time, end_time, time_slice):
     ) s1 """,(time_slice, tsc_tick, time_slice, time_slice,time_slice,time_slice,cpu,time_slice,))
 
     if DEBUG:
-        print cur.query
+        print(cur.query)
 
     results = cur.fetchall()
     traces = {}
@@ -879,7 +879,7 @@ def getFullAvgGraphPerCpu(schema, cpu, start_time, end_time, time_slice):
             # else:
             named_cur.execute("SELECT * from "+schema+".tgid where id = %s", (row[1],))
             if DEBUG:
-                print named_cur.query
+                print(named_cur.query)
 
             name = named_cur.fetchone()
             traces.update({row[1]: {"n":name.name,"id":name.id,"p":name.pid,"tgid":name.tgid,"color":name.color,"data":{} }})
@@ -969,11 +969,11 @@ def graph_full(traceId, pixels):
         end_time=tmp[1]
         time_slice = (end_time - start_time -1) / pixels
         if DEBUG:
-            print "Graph Full"
-            print "Start=%d"%start_time
-            print "End=%d"%end_time
-            print "timeslice=%d"%time_slice
-            print "pixels Wanted=%d"%pixels
+            print("Graph Full")
+            print("Start=%d"%start_time)
+            print("End=%d"%end_time)
+            print("timeslice=%d"%time_slice)
+            print("pixels Wanted=%d"%pixels)
         traces = {}
         for cpu in range(cpus[0]):
             traces[cpu], row_count = getFullAvgGraphPerCpu(schema, cpu, start_time, end_time, time_slice)
@@ -1009,7 +1009,7 @@ def getGraphAvgPerCpu(schema, cpu, start_time, end_time, time_slice):
     ) s1 """,(time_slice, tsc_tick, start_time, time_slice, time_slice,time_slice,time_slice,cpu,start_time, end_time, time_slice,))
 
     if DEBUG:
-        print cur.query
+        print(cur.query)
 
     results = cur.fetchall()
     traces = {}
@@ -1084,7 +1084,7 @@ def getGraphPerCpu(schema, cpu, start_time, end_time, time_slice, gen_start, gen
         """,(time_slice, tsc_tick, start_time, time_slice, time_slice,time_slice,time_slice,time_slice,time_slice,time_slice,time_slice,time_slice,cpu, start_time,cpu, start_time,end_time, cpu, end_time, start_time,end_time))
 
     if DEBUG:
-        print cur.query
+        print(cur.query)
 
     results = cur.fetchall()
     traces = {}
@@ -1129,22 +1129,22 @@ def graph(traceId, pixels, start, end):
         traces = {}
 
         if DEBUG:
-            print "start_time             =",(start,)
-            print "end_time               =",(end,)
-            print "pixels                 =",(pixels,)
-            print "time in 1 pixel        =",((end_time - start_time)/pixels,)
-            print "(end_time - start_time)=",(end_time - start_time,)
-            print "gen_start              =",(gen_start,)
-            print "gen_end                =",(gen_end,)
-            print "gentime in 1 pixel     =",((gen_end-gen_start)/pixels,)
-            print "new pixels             =",((gen_end-gen_start)/((gen_end-gen_start)/pixels),)
+            print("start_time             =",(start,))
+            print("end_time               =",(end,))
+            print("pixels                 =",(pixels,))
+            print("time in 1 pixel        =",((end_time - start_time)/pixels,))
+            print("(end_time - start_time)=",(end_time - start_time,))
+            print("gen_start              =",(gen_start,))
+            print("gen_end                =",(gen_end,))
+            print("gentime in 1 pixel     =",((gen_end-gen_start)/pixels,))
+            print("new pixels             =",((gen_end-gen_start)/((gen_end-gen_start)/pixels),))
 
         # Timeslice bigger than 10ms go for AVG view
         if ( end_time - start_time ) / 1596 > 10000:
             if DEBUG:
-                print "*** AVG view"
-                print "start_time             =",(start_time,)
-                print "end_time               =",(end_time,)
+                print("*** AVG view")
+                print("start_time             =",(start_time,))
+                print("end_time               =",(end_time,))
             for cpu in range(cpus[0]):
                 traces[cpu], row_count = getGraphAvgPerCpu(schema, cpu, gen_start, gen_end, gen_timeslice)
         else:
@@ -1152,12 +1152,12 @@ def graph(traceId, pixels, start, end):
                 traces[cpu], row_count = getGraphPerCpu(schema, cpu, start_time, end_time, time_slice, gen_start, gen_end)
 
         if DEBUG:
-            print "Graph - Zoom"
-            print "Data between=%d"%(end_time - start_time)
-            print "Start=%d"%start_time
-            print "End=%d"%end_time
-            print "timeslice=%d"%time_slice
-            print "pixels Wanted=%d"%pixels
+            print("Graph - Zoom")
+            print("Data between=%d"%(end_time - start_time))
+            print("Start=%d"%start_time)
+            print("End=%d"%end_time)
+            print("timeslice=%d"%time_slice)
+            print("pixels Wanted=%d"%pixels)
             if time_slice <= 0:
                 return jsonify({"status":False})
 
@@ -1192,7 +1192,7 @@ def search(traceId):
         r = [dict((named_cur.description[i][0], value) \
                for i, value in enumerate(row)) for row in named_cur.fetchall()]
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         return jsonify({"data":r})
 
     return jsonify({"error":"error"})
@@ -1209,14 +1209,14 @@ def search_hits(traceId):
         for id in request.json['ids']:
             ids = ids + comma + str(id)
             comma = ", "
-        print ids
+        print(ids)
         named_cur.execute("""SELECT symbol.id, count(*) as hits from """+schema+""".symbol
                 LEFT JOIN """+schema+""".ins on symbol.id = ins.symbol_id
                 WHERE symbol.id IN %s
                 AND call = 'c'
                 GROUP BY 1""",(tuple(request.json['ids']),))
         if DEBUG:
-            print named_cur.query
+            print(named_cur.query)
         r = [dict((named_cur.description[i][0], value) \
                for i, value in enumerate(row)) for row in named_cur.fetchall()]
         return jsonify({"data":r})
@@ -1230,11 +1230,11 @@ def search_full(traceId,pixels,start_time,end_time,symbol_id):
     schema = "t" + str(traceId)
     time_slice = (end_time - start_time -1) / pixels
     if DEBUG:
-        print "Search Full"
-        print "Start=%d"%start_time
-        print "End=%d"%end_time
-        print "timeslice=%d"%time_slice
-        print "pixels Wanted=%d"%pixels
+        print("Search Full")
+        print("Start=%d"%start_time)
+        print("End=%d"%end_time)
+        print("timeslice=%d"%time_slice)
+        print("pixels Wanted=%d"%pixels)
 
     named_cur.execute("""SELECT (ts/%s)*%s as ts, count(*) as hits, cpu
             from """+schema+""".ins
@@ -1246,7 +1246,7 @@ def search_full(traceId,pixels,start_time,end_time,symbol_id):
             order by ts""",(time_slice,time_slice,start_time,end_time,time_slice,symbol_id,start_time-1,end_time+1,))
 
     if DEBUG:
-        print named_cur.query
+        print(named_cur.query)
     rows = named_cur.fetchall()
 
     r = [dict((named_cur.description[i][0], value) \
@@ -1261,11 +1261,11 @@ def search_full_overflow(traceId,pixels,start_time,end_time):
     schema = "t" + str(traceId)
     time_slice = (end_time - start_time -1) / pixels
     if DEBUG:
-        print "Search Full"
-        print "Start=%d"%start_time
-        print "End=%d"%end_time
-        print "timeslice=%d"%time_slice
-        print "pixels Wanted=%d"%pixels
+        print("Search Full")
+        print("Start=%d"%start_time)
+        print("End=%d"%end_time)
+        print("timeslice=%d"%time_slice)
+        print("pixels Wanted=%d"%pixels)
 
     # TODO symbol like overflow is SLOW!!!!! Change look for ID so that it can be indexed
     named_cur.execute("""SELECT id from """+schema+""".symbol where symbol LIKE 'overflow'""")
@@ -1282,7 +1282,7 @@ def search_full_overflow(traceId,pixels,start_time,end_time):
             order by ts""",(time_slice,time_slice,start_time,end_time,time_slice,symbol_id,start_time-1,end_time+1,))
 
     if DEBUG:
-        print named_cur.query
+        print(named_cur.query)
     rows = named_cur.fetchall()
 
     r = [dict((named_cur.description[i][0], value) \
@@ -1297,11 +1297,11 @@ def search_full_lost(traceId,pixels,start_time,end_time):
     schema = "t" + str(traceId)
     time_slice = (end_time - start_time -1) / pixels
     if DEBUG:
-        print "Search Full"
-        print "Start=%d"%start_time
-        print "End=%d"%end_time
-        print "timeslice=%d"%time_slice
-        print "pixels Wanted=%d"%pixels
+        print("Search Full")
+        print("Start=%d"%start_time)
+        print("End=%d"%end_time)
+        print("timeslice=%d"%time_slice)
+        print("pixels Wanted=%d"%pixels)
 
     named_cur.execute("""SELECT id from """+schema+""".symbol where symbol LIKE 'lost'""")
     symbol_id = named_cur.fetchone()
@@ -1317,7 +1317,7 @@ def search_full_lost(traceId,pixels,start_time,end_time):
             order by ts""",(time_slice,time_slice,start_time,end_time,time_slice,symbol_id,start_time-1,end_time+1,))
 
     if DEBUG:
-        print named_cur.query
+        print(named_cur.query)
     rows = named_cur.fetchall()
 
     r = [dict((named_cur.description[i][0], value) \
