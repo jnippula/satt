@@ -88,7 +88,7 @@ class SatHelper:
                 mod = __import__('readchar')
                 self._readchar = getattr((mod), 'readchar')
             except ImportError:
-                self._readchar = raw_input
+                self._readchar = input
         return self._readchar
 
     def prepare_readline(self):
