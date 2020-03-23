@@ -105,7 +105,7 @@ void dump_tsc(const tsc_value& t)
 }
 
 // TODO: remove
-void dump_block(const tsc_block& block)
+void __attribute__((unused)) dump_block(const tsc_block& block)
 {
     dump_tsc(*block.mtc.first);
     printf("#...\n");
@@ -167,7 +167,7 @@ int adjacent_mtc_delta(int from, int to)
     return to - from;
 }
 
-void detect_mtc_gaps(tsc_block& block)
+void __attribute__((unused)) detect_mtc_gaps(tsc_block& block)
 {
     auto           curr = block.mtc.first;
     tscs::iterator prev_mtc;
@@ -194,14 +194,14 @@ void detect_mtc_gaps(tsc_block& block)
     } while (curr != block.mtc.second);
 }
 
-void detect_mtc_gaps(vector<tsc_block>& blocks)
+void __attribute__((unused)) detect_mtc_gaps(vector<tsc_block>& blocks)
 {
     for (auto& block : blocks) {
         detect_mtc_gaps(block);
     }
 }
 
-void detect_mtc_gaps(tsc_collection& collection)
+void __attribute__((unused)) detect_mtc_gaps(tsc_collection& collection)
 {
     if (collection.has_head) {
         detect_mtc_gaps(collection.head);
@@ -1386,7 +1386,7 @@ void assign_tscs_for_mtcs_after_tsctmas(tscs& tscs)
 #endif
 
 // second pass heuristics: fill tsc values for MTCs between two tsc values
-void fill_mtc_tscs(tscs::iterator        from,
+void __attribute__((unused)) fill_mtc_tscs(tscs::iterator        from,
                    const tscs::iterator& to,
                    uint64_t              mtc_delta)
 {
@@ -1408,12 +1408,12 @@ void fill_mtc_tscs(tscs::iterator        from,
     }
 }
 
-void fill_mtc_tscs(tsc_block& block, uint64_t tsc_mtc_ratio, uint64_t mtc_delta)
+void __attribute__((unused)) fill_mtc_tscs(tsc_block& block, uint64_t tsc_mtc_ratio, uint64_t mtc_delta)
 {
     fill_mtc_tscs(block.mtc.first, block.mtc.second, mtc_delta);
 }
 
-void fill_mtc_tscs(tsc_collection& collection, uint64_t tsc_mtc_ratio)
+void __attribute__((unused)) fill_mtc_tscs(tsc_collection& collection, uint64_t tsc_mtc_ratio)
 {
     for (auto& block : collection.blocks) {
         uint64_t mtc_delta;
@@ -1460,7 +1460,7 @@ void project_mtc_tscs_into_past(tscs::iterator        from,
     }
 }
 
-void fill_broken_block_ends(tsc_collection& collection, uint64_t tsc_mtc_ratio)
+void __attribute__((unused)) fill_broken_block_ends(tsc_collection& collection, uint64_t tsc_mtc_ratio)
 {
     if (collection.has_head) {
         project_mtc_tscs_into_past(collection.head.mtc.second,
