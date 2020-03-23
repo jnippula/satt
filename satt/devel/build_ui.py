@@ -21,9 +21,9 @@ import sys
 # http_proxy_server = 'http://proxy.example.com:888/'
 http_proxy_server = ''
 
-print "***********************************"
-print "****       Build SATT UI       ****"
-print "***********************************"
+print("***********************************")
+print("****       Build SATT UI       ****")
+print("***********************************")
 old_dir = os.getcwd()
 
 sat_home = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..'))
@@ -40,14 +40,14 @@ if http_proxy_server != '':
     if os.environ.get('https_proxy') is None:
         os.putenv('https_proxy', http_proxy_server)
 
-print 'npm install...'
+print('npm install...')
 os.system('npm install')
 
-print 'bower install...'
+print('bower install...')
 os.system('./node_modules/bower/bin/bower install')
 
-print 'gulp build ui...'
+print('gulp build ui...')
 os.system('./node_modules/gulp/bin/gulp.js build')
 
 os.chdir(old_dir)
-print 'done.'
+print('done.')
