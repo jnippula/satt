@@ -16,7 +16,7 @@
 import os
 import psycopg2
 import psycopg2.extras
-import ConfigParser
+import configparser
 
 SAT_HOME = os.environ.get('SAT_HOME')
 CONFIG_FILE = os.path.join(SAT_HOME, 'conf', 'db_config')
@@ -52,16 +52,16 @@ class Status(object):
         return self.dbconfig[key]
 
     def _printInitConfigHelp(self):
-        print "ERROR!"
-        print "<satt>/conf/db_config file is needed"
-        print ""
-        print "[DB]"
-        print "dbname: <dbname>"
-        print "user: <username>"
-        print "password: <password>"
+        print("ERROR!")
+        print("<satt>/conf/db_config file is needed")
+        print("")
+        print("[DB]")
+        print("dbname: <dbname>")
+        print("user: <username>")
+        print("password: <password>")
 
     def _initConfig(self):
-        self.config = ConfigParser.ConfigParser()
+        self.config = configparser.ConfigParser()
         self.config.read(CONFIG_FILE)
         error = False
         try:
@@ -184,14 +184,14 @@ class Status(object):
 
     # Helper function to check if column exists in table
     def check_if_column_exists(self, schema, table, column):
-        print "Check if column exists column {0} {1} {2}".format(schema, table, column)
+        print("Check if column exists column {0} {1} {2}".format(schema, table, column))
         self.cursor.execute("select exists(select * from information_schema.columns where table_schema=%s " +
                             "and table_name=%s and column_name=%s);", (schema, table, column,))
         res = self.cursor.fetchone()
         return res[0]
 
     def create_column(self, table, column, type, default=False):
-        print "Create column {0} {1}".format(table, column)
+        print("Create column {0} {1}".format(table, column))
         if default:
             self.cursor.execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + type + " DEFAULT " + default +
                                 ";")
