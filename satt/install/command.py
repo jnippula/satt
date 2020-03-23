@@ -21,7 +21,7 @@
 import os
 import sys
 import argparse
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import tarfile
 import subprocess
 from satt.common import envstore
@@ -62,13 +62,13 @@ class SattInstall:
         if self._local_version == '':
             self._local_version == '0.0.0'
 
-        print ("SATT version: " + self._local_version + "\n")
+        print("SATT version: " + self._local_version + "\n")
 
         # Check latest satt version in server for update
         try:
             if not ' ' in satt_release_server:
-                proxy_handler = urllib2.ProxyHandler({})
-                opener = urllib2.build_opener(proxy_handler)
+                proxy_handler = urllib.request.ProxyHandler({})
+                opener = urllib.request.build_opener(proxy_handler)
                 resp = opener.open(satt_release_server + '/releases/version.txt')
                 self._server_version = resp.read().rstrip()
         except:
@@ -78,22 +78,22 @@ class SattInstall:
             t_serv = tuple(map(int, (self._server_version.split("-")[0].split("."))))
             t_loc = tuple(map(int, (self._local_version.split("-")[0].split("."))))
             if t_serv > t_loc:
-                print ("New version available: " + self._server_version)
-                resp = raw_input("Update new version (y/N)? ")
+                print("New version available: " + self._server_version)
+                resp = input("Update new version (y/N)? ")
                 if len(resp) > 0 and resp[0].lower() == 'y':
                     self._install = False
-                    import urllib2
-                    proxy_handler = urllib2.ProxyHandler({})
-                    opener = urllib2.build_opener(proxy_handler)
+                    import urllib.request, urllib.error, urllib.parse
+                    proxy_handler = urllib.request.ProxyHandler({})
+                    opener = urllib.request.build_opener(proxy_handler)
                     link = satt_release_server + '/releases/sat-latest.tgz'
                     try:
                         rf = opener.open(link)
                         with open(os.path.basename(link), "wb") as lf:
                             lf.write(rf.read())
-                    except urllib2.HTTPError as e:
-                        print ("HTTP error: ", e.code, link)
-                    except urllib2.URLError as e:
-                        print ("URL error: ", e.reason, link)
+                    except urllib.error.HTTPError as e:
+                        print("HTTP error: ", e.code, link)
+                    except urllib.error.URLError as e:
+                        print("URL error: ", e.reason, link)
 
                     print ("Extract file")
                     os.system('tar -xvzf ' + os.path.basename(link))
@@ -125,7 +125,7 @@ class SattInstall:
                 try:
                     os.system(virtual_env_pip_path + " install '" + package + "'")
                 except Exception as e:
-                    print ("Error installing package " + package)
+                    print("Error installing package " + package)
                     print (e)
 
             # Install disassembler from the git
@@ -157,7 +157,7 @@ class SattInstall:
                 print("*** Creating Postgresql DB configuration")
                 print("**************************************************************")
                 try:
-                    use_sudo = raw_input('Would you like to use sudo rights to install satt user for postgresql db [y/n]?\n')
+                    use_sudo = input('Would you like to use sudo rights to install satt user for postgresql db [y/n]?\n')
                     if use_sudo in ['y','Y','yes','Yes']:
                         user = os.popen('''sudo -u postgres psql -q --command "SELECT * FROM pg_user WHERE usename = 'sat';" ''').read()
                         if "sat" not in user:
@@ -196,7 +196,7 @@ class SattInstall:
         print("*** Add SATT to bash autocompletion")
         print("**************************************************************")
         # Add satt autocomplete script
-        use_sudo = raw_input('Would you like to use sudo rights to add satt support for bash autocompletition [y/n]?\n')
+        use_sudo = input('Would you like to use sudo rights to add satt support for bash autocompletition [y/n]?\n')
         if use_sudo in ['y','Y','yes','Yes']:
             src_path = os.path.join(self._sat_home, 'conf', 'satt.completion')
             dest_path = '/etc/bash_completion.d/satt'
@@ -216,10 +216,7 @@ class SattInstall:
 
             activate_this_file = os.path.join(virtual_env_path, 'bin', 'activate_this.py')
             if os.path.isfile(activate_this_file):
-                if sys.version_info < (3, 0):
-                    execfile(activate_this_file, dict(__file__=activate_this_file))
-                else:
-                    exec(compile(open(activate_this_file, "rb").read(), activate_this_file, 'exec'), dict(__file__=activate_this_file))
+                exec(compile(open(activate_this_file, "rb").read(), activate_this_file, 'exec'), dict(__file__=activate_this_file))
             else:
                 print ("ERROR: Virtualenv installation error!")
         else:
@@ -237,8 +234,8 @@ class SattInstall:
         proxy = {}
         if os.environ.get('https_proxy'):
             proxy['https'] = os.environ.get('https_proxy')
-        proxy_handler = urllib2.ProxyHandler(proxy)
-        opener = urllib2.build_opener(proxy_handler)
+        proxy_handler = urllib.request.ProxyHandler(proxy)
+        opener = urllib.request.build_opener(proxy_handler)
         f = opener.open(DISASSEMBLER_URL)
         print('Downloading disassembler')
         data = f.read()
@@ -301,7 +298,7 @@ class SattInstall:
 
         else:
             print('Warninig: Could not install SATT to any local PATH')
-            use_sudo = raw_input('Would you like to use sudo access right to create satt link to /usr/bin/satt [y/n]?\n')
+            use_sudo = input('Would you like to use sudo access right to create satt link to /usr/bin/satt [y/n]?\n')
             if use_sudo in ['y','Y','yes','Yes']:
                 # Create link to /usr/bin
                 src_path = os.path.join(self._sat_home, 'bin', 'satt')
