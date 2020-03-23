@@ -41,38 +41,38 @@ class AdbControl(Control):
             self.adb = False
         else:
             if not self.adb.check_path():
-                print "ERROR: adb was not found"
+                print("ERROR: adb was not found")
                 sys.exit()
             self.adb_version = re.split('\.', self.adb.PYADB_VERSION)
 
     def initialize(self):
         if not self.adb:
-            print "ADB not supported!"
+            print("ADB not supported!")
             sys.exit()
         Control.initialize(self)
         self._debug_print("AdbControl::initialize")
         root = self.adb.shell_command("id")
         if DEBUG_ENABLE:
-            print root
+            print(root)
         if not root:
             return False
 
         retry_count = 0
         while (root is not None) and (root.find('uid=0(root)') == -1):
             if retry_count == 0:
-                print "set adb to rootmode.."
+                print("set adb to rootmode..")
             root = self.set_adb_root()
             if DEBUG_ENABLE:
-                print root
+                print(root)
             time.sleep(2)
             root = self.adb.shell_command("id")
             if DEBUG_ENABLE:
-                print root
+                print(root)
             retry_count += 1
             if retry_count > 3:
-                print 'Root mode does not respond'
-                print 'Please, try to un-plug and plug the USB cable'
-                resp = raw_input("  Press ENTER to continue, 'q' to quit :")
+                print('Root mode does not respond')
+                print('Please, try to un-plug and plug the USB cable')
+                resp = input("  Press ENTER to continue, 'q' to quit :")
                 if resp == 'q' or resp == 'Q':
                     sys.exit(-1)
                 retry_count = 1
@@ -94,7 +94,7 @@ class AdbControl(Control):
         return self.adb.get_remote_file(copy_from, copy_to)
 
     def set_adb_root(self):
-        if self.adb.set_adb_root.func_code.co_argcount == 1:
+        if self.adb.set_adb_root.__code__.co_argcount == 1:
             return self.adb.set_adb_root()
         else:
             return self.adb.set_adb_root(1)
