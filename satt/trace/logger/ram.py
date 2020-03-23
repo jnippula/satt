@@ -72,7 +72,7 @@ class RamLogger(Logger):
             # self.dump_linux_gate()
             self.dump_kernel_modules()
             # ci.packageForUpload(name)
-            print "All Done!"
+            print("All Done!")
             # ci.instructions_for_processing(name, SAT_HOME, path)
             self.instructions_for_processing()
 
@@ -86,9 +86,9 @@ class RamLogger(Logger):
         for cpu_stream in trace_streams:
             match = re.search("/cpu(\d+)_stream", cpu_stream)
             if match:
-                print "\rcpu" + match.group(1) + " rtit data: ",
+                print("\rcpu" + match.group(1) + " rtit data: ", end=' ')
                 sys.stdout.flush()
                 self._control.get_remote_file(cpu_stream.strip(), self.trace_path + "/cpu" + match.group(1) + ".bin")
                 off_file.write(self._control.shell_command("cat /sys/kernel/debug/sat/cpu" + match.group(1) + "_offset"))
-                print cpu_stream
+                print(cpu_stream)
         off_file.close()
