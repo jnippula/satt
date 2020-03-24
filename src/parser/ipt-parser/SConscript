@@ -25,7 +25,7 @@ localenv.component_libdirs = [ libdirs[x] for x in localenv.components ]
 localenv.component_srcdirs = localenv.component_srcdirs + ['#../../kernel-module']
 localenv.Append(CPPPATH = localenv.component_srcdirs)
 
-print "INSTALLDIR " + installdir
+print("INSTALLDIR " + installdir)
 
 localenv.StaticLibrary('sat-ipt-parser', ['sat-ipt-iterator.cpp',
                                           'sat-ipt-parser-sideband-info.cpp',

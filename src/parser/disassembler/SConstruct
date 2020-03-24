@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import commands
+import subprocess
 
 flags = ARGUMENTS.get('flags', '-O3') + ' '
 
@@ -31,7 +31,7 @@ env.Program(['sat-disassembler-dump.cpp'],
                   'sat-common',
                   File('/usr/lib/libcapstone.a'),
                   File('/usr/lib/libbfd.a'),
-                  File(commands.getoutput('g++ -print-file-name=libelf.a')),
+                  File(subprocess.run('g++ -print-file-name=libelf.a', stderr=subprocess.PIPE, stdout=subprocess.PIPE)),
                   'iberty',
                   'z',
                   'dl'],
