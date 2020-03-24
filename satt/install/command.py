@@ -212,7 +212,7 @@ class SattInstall:
 
         if not VENV:
             virtual_env_path = os.path.join(self._sat_home, 'bin', 'env')
-            os.system('virtualenv ' + virtual_env_path + ' > /dev/null')
+            os.system('virtualenv -p python3 ' + virtual_env_path + ' > /dev/null')
 
             activate_this_file = os.path.join(virtual_env_path, 'bin', 'activate_this.py')
             if os.path.isfile(activate_this_file):
@@ -262,7 +262,8 @@ class SattInstall:
 
     def _check_and_remove_installed_satt_path(self, satt_symlink_path):
         # Check that there are no multiple SATTs in exec paths
-        first_satt_path = subprocess.check_output(['which', 'satt']).strip()
+        sb_out = subprocess.run(["which", "satt"], stdout=subprocess.PIPE, shell=False)
+        first_satt_path = sb_out.stdout.decode("utf-8").rstrip()
         if not first_satt_path == satt_symlink_path:
             if os.access(os.path.dirname(first_satt_path), os.W_OK):
                 os.remove(first_satt_path)
