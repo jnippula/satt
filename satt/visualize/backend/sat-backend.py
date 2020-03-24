@@ -20,7 +20,7 @@ import psycopg2.extras
 import datetime
 import simplejson as json
 from flask import Flask, request, jsonify, send_file, abort
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import glob
 from flask import g
 from werkzeug.local import LocalProxy
