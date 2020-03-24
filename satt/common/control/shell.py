@@ -40,10 +40,12 @@ class ShellControl(Control):
     def shell_command(self, command, skip_exception=False):
         self._debug_print("ShellControl::shell_command")
         if skip_exception:
-            return subprocess.check_output(command, shell=True)
+            sp_out = subprocess.run(command, stdout=subprocess.PIPE, shell=False)
+            return sp_out.stdout.decode("utf-8").rstrip()
         else:
             try:
-                return subprocess.check_output(command, shell=True)
+                sp_out = subprocess.run(command, stdout=subprocess.PIPE, shell=False)
+                return sp_out.stdout.decode("utf-8").rstrip()
             except Exception as e:
                 return str(e)
 
