@@ -13,10 +13,10 @@
  */
 #include <linux/slab.h>
 #include <linux/mm.h>
+#include <linux/sizes.h>
 
 #include <asm/perf_event.h>
 #include <asm/insn.h>
-#include <asm-generic/sizes.h>
 
 #include "config.h"
 #include "sat-tracer.h"
