@@ -22,7 +22,7 @@
 import sys
 import os
 import re
-from logger import Logger
+from .logger import Logger
 from satt.common import envstore
 
 

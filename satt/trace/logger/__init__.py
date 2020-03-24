@@ -14,8 +14,8 @@
 // limitations under the License.
 '''
 
-from logger import Logger
-from ram import RamLogger
-from pti import PtiLogger
-from usb import UsbLogger
-from panic import PanicLogger
+from .logger import Logger
+from .ram import RamLogger
+from .pti import PtiLogger
+from .usb import UsbLogger
+from .panic import PanicLogger

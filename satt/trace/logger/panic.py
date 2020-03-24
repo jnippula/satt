@@ -22,7 +22,7 @@
 
 import sys
 import time
-from logger import Logger
+from .logger import Logger
 
 
 class PanicLogger(Logger):

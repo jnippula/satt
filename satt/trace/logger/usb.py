@@ -19,7 +19,7 @@
 
 """
 
-from logger import Logger
+from .logger import Logger
 from satt.common import envstore
 class UsbLogger(Logger):
     """ USB logger

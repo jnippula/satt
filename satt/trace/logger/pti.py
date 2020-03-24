@@ -24,7 +24,7 @@ import sys
 import os
 import re
 import time
-from logger import Logger
+from .logger import Logger
 from satt.common import envstore
 NAG_OPTIONS = False
 

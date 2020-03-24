@@ -15,7 +15,7 @@
 // limitations under the License.
 '''
 
-from satparser import *
+from .satparser import *
 from collections import defaultdict
 import sys
 import os
