@@ -49,7 +49,8 @@ class Satt:
             old_dir = os.getcwd()
             os.chdir(self._sat_path)
             try:
-                self._satt_version = subprocess.check_output('git describe --tags --always', shell=True).rstrip()
+                sp_out = subprocess.run(['git', 'describe', '--tags', '--always'], stdout=subprocess.PIPE, shell=False)
+                self._satt_version = sp_out.stdout.decode("utf-8").rstrip()
             except:
                 self._satt_version = '0.0.0'
             os.chdir(old_dir)
